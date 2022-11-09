@@ -1,4 +1,5 @@
-﻿using COLP.Identity.API.Extensions;
+﻿using COLP.Identity.API.DTOs;
+using COLP.Identity.API.Extensions;
 using COLP.Identity.API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ namespace COLP.Identity.API.Controllers
 
         #region Controllers
         [HttpPost("register")]
-        public async Task<ActionResult> Register(UserRegisterViewModel userRegister)
+        public async Task<ActionResult> Register(UserRegisterDto userRegister)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -38,7 +39,8 @@ namespace COLP.Identity.API.Controllers
             {
                 UserName = userRegister.Email,
                 Email = userRegister.Email,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                PasswordHash = userRegister.Password
             };
 
             var result = await _userManager.CreateAsync(user, userRegister.Password);

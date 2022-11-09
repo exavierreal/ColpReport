@@ -7,7 +7,21 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
+var AllowSpecificOrigins = "_allowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+#region Enable Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: AllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://127.0.0.1:5173").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+        }
+    );
+});
+#endregion
 
 // Add services to the container.
 
@@ -94,6 +108,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 #endregion
+
+app.UseCors(AllowSpecificOrigins);
 
 app.MapControllers();
 
