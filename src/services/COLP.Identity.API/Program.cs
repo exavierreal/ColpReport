@@ -1,61 +1,44 @@
 using COLP.Identity.API.Data;
 using COLP.Identity.API.Extensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using COLP.WebAPI.Core.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
+using COLP.Identity.API.Configuration;
+
+var AllowSpecificOrigins = "_allowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
+AuthConfig authConfig = new();
 
-// Add services to the container.
-
-#region Idendity Configuration
+#region API Configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: AllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://127.0.0.1:5173").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+        }
+    );
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddControllers();
+#endregion
+
+#region Identity and Auth Configuration
 builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddRoles<IdentityRole>()
     .AddErrorDescriber<IdentityMessagesPortuguese>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+authConfig.AddJwtConfiguration(builder);
 #endregion
 
-#region Configuration of JWT
-
-var appSettingsSection = builder.Configuration.GetSection("AppSettings");
-builder.Services.Configure<AppSettings>(appSettingsSection);
-
-var appSettings = appSettingsSection.Get<AppSettings>();
-var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(bearerOptions =>
-{
-    bearerOptions.RequireHttpsMetadata = true;
-    bearerOptions.SaveToken = true;
-    bearerOptions.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = appSettings.Audience,
-        ValidIssuer = appSettings.Issuer
-    };
-});
-
-#endregion
-
-builder.Services.AddControllers();
-
-#region Swagger And Endpoints Configuration
+#region Swagger Configuration
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -70,6 +53,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 #endregion
+
+builder.Services.AddMessageBusConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
@@ -88,12 +73,9 @@ app.UseHttpsRedirection();
 
 #endregion
 
-#region Use Idendity Configuration
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-#endregion
+authConfig.UseAuth(app);
+    
+app.UseCors(AllowSpecificOrigins);
 
 app.MapControllers();
 
