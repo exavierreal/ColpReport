@@ -1,6 +1,9 @@
-﻿using COLP.Identity.API.DTOs;
-using COLP.Identity.API.Extensions;
+﻿using COLP.Core.Controllers;
+using COLP.Core.Messages.Integration;
+using COLP.Identity.API.DTOs;
 using COLP.Identity.API.Models;
+using COLP.MessageBus;
+using COLP.WebAPI.Core.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -14,22 +17,20 @@ namespace COLP.Identity.API.Controllers
     [Route("api/[controller]")]
     public class AuthController : MainController
     {
-        #region Variables Declared
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
-        #endregion
+        private readonly IMessageBus _bus;
 
-        #region Constructor
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings)
+        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings, IMessageBus bus)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _appSettings = appSettings.Value;
+            _bus = bus;
         }
-        #endregion
 
-        #region Controllers
+
         [HttpPost("register")]
         public async Task<ActionResult> Register(UserRegisterDto userRegister)
         {
@@ -47,6 +48,14 @@ namespace COLP.Identity.API.Controllers
 
             if (result.Succeeded)
             {
+                var userResult = await RegisterColporteur(userRegister);
+
+                if (!userResult.ValidationResult.IsValid)
+                {
+                    await _userManager.DeleteAsync(user);
+                    return CustomResponse(userResult.ValidationResult);
+                }
+
                 return CustomResponse(await GenerateToken(userRegister.Email!));
             }
 
@@ -79,7 +88,6 @@ namespace COLP.Identity.API.Controllers
             AddProcessmentError("Usuário ou senha incorretos");
             return CustomResponse();
         }
-        #endregion
 
         #region Private Methods
         private async Task<UserResponseLogin> GenerateToken(string email)
@@ -151,6 +159,23 @@ namespace COLP.Identity.API.Controllers
         }
 
         private static long ToUnixEpochDate(DateTime date) => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+
+        private async Task<ResponseMessage> RegisterColporteur(UserRegisterDto userRegister)
+        {
+            var user = await _userManager.FindByEmailAsync(userRegister.Email);
+
+            var registeredUser = new RegisteredUserIntegrationEvent(Guid.Parse(user.Id), userRegister.Name, userRegister.LastName);
+
+            try
+            {
+                return await _bus.RequestAsync<RegisteredUserIntegrationEvent, ResponseMessage>(registeredUser);
+            }
+            catch
+            {
+                await _userManager.DeleteAsync(user);
+                throw;
+            }
+        }
 
         #endregion
     }

@@ -1,4 +1,4 @@
-﻿namespace COLP.Identity.API.Extensions
+﻿namespace COLP.WebAPI.Core.Identity
 {
     public class AppSettings
     {

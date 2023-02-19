@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace COLP.Identity.API.Controllers
+namespace COLP.Core.Controllers
 {
     [ApiController]
-    public abstract class MainController : Controller
+    public abstract class MainController : ControllerBase
     {
         protected ICollection<string> Errors = new List<string>();
 
         protected ActionResult CustomResponse(object result = null)
         {
-            if(isValid())
+            if (IsValid())
             {
                 return Ok(result);
             }
@@ -33,7 +34,17 @@ namespace COLP.Identity.API.Controllers
             return CustomResponse();
         }
 
-        protected bool isValid()
+        protected ActionResult CustomResponse(ValidationResult validationResult)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                AddProcessmentError(error.ErrorMessage);
+            }
+
+            return CustomResponse();
+        }
+
+        protected bool IsValid()
         {
             return !Errors.Any();
         }

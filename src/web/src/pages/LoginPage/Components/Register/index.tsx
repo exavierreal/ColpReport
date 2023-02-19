@@ -1,7 +1,7 @@
 import { Icon } from "@iconify-icon/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import * as yup from 'yup';
-import { useAuthApi } from "../../Api/UseAuthApi";
+import { useAuthApi } from "../../Api/useAuthApi";
 import { User } from "../../interfaces/User";
 import { Buttons, ContentLabel, ErrorNotifications, Field, Form, GoogleButton, GoogleIcon, Input, Label, Line, NameContainer, OrDivision, SaveButton } from "../Shared/LoginForm/styles";
 import { TermsOfUse } from "./styles";
