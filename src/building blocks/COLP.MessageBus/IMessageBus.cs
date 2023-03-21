@@ -1,10 +1,14 @@
 ﻿using COLP.Core.Messages.Integration;
+using EasyNetQ;
 using EasyNetQ.Internals;
 
 namespace COLP.MessageBus
 {
     public interface IMessageBus : IDisposable
     {
+        bool IsConnected { get; }
+        IAdvancedBus advancedBus { get; }
+
         void Publish<T>(T message) where T : IntegrationEvent;
 
         Task PublishAsync<T>(T message) where T : IntegrationEvent;
@@ -20,8 +24,6 @@ namespace COLP.MessageBus
         IDisposable Respond<TRequest, TResponse>(Func<TRequest, TResponse> responder) where TRequest : IntegrationEvent where TResponse : ResponseMessage;
 
         AwaitableDisposable<IDisposable> RespondAsync<TRequest, TResponse>(Func<TRequest, Task<TResponse>> responder) where TRequest : IntegrationEvent where TResponse : ResponseMessage;
-
-        bool IsConnected { get; }
 
     }
 }

@@ -1,7 +1,7 @@
 import { Icon } from "@iconify-icon/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import * as yup from 'yup';
-import { useAuthApi } from "../../Api/useAuthApi";
+import { useRegisterApi } from "../../Api/useAuthApi";
 import { User } from "../../interfaces/User";
 import { Buttons, ContentLabel, ErrorNotifications, Field, Form, GoogleButton, GoogleIcon, Input, Label, Line, NameContainer, OrDivision, SaveButton } from "../Shared/LoginForm/styles";
 import { TermsOfUse } from "./styles";
@@ -13,7 +13,7 @@ export function Register() {
     const [errorMessage, setErrorMessage] = useState("");
     const [user, setUser] = useState<User>({ name: '', lastname: '', email: '', password: '', confirmPassword: '' })
 
-    const { mutate } = useAuthApi();
+    const { mutate } = useRegisterApi();
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
         const {name, value} = event.target;
@@ -25,7 +25,9 @@ export function Register() {
         e.preventDefault();
 
         if (await validateUser()) {
-            mutate(user);
+            var a = mutate(user);
+
+            debugger;
         }
     }
 
