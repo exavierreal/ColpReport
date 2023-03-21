@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Login } from "../Login";
 import { Register } from "../Register";
-import { Box, Container, Rectangle, Tab, TabPanel, Tabs } from "./styles";
+import { Container, Tab, TabPanel, Tabs } from "./styles";
 
 export function FormBox() {
     const [activeTab, setActiveTab] = useState("Register");
@@ -11,7 +11,7 @@ export function FormBox() {
 
     return (
         <>
-            <Container>
+            <Container className={activeTab === "Login" ? "login-width" : "register-width"}>
                 <Tabs>
                     <Tab className={activeTab === "Login" ? "active" : ""} onClick={handleTabLogin}>Entrar</Tab>
                     <Tab className={activeTab === "Register" ? "active" : ""} onClick={handleTabRegister}>Registrar</Tab>
@@ -21,10 +21,6 @@ export function FormBox() {
                     {activeTab === "Login" ? <Login /> : <Register />}
                 </TabPanel>
             </Container>
-
-            <Rectangle className={ activeTab === "Login" ? "custom-box" : ""}>
-                <Box />
-            </Rectangle>
         </>
     );
 }

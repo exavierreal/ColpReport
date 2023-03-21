@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "COLP.WebAPI.Core": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:62842;http://localhost:62843"
+    }
+  }
+}

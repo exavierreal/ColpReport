@@ -1,15 +1,47 @@
 import styled from 'styled-components';
+import { device } from '../../../../global/device';
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: calc(100% - 5rem);
-  margin: 1.8906rem 0;
+  margin: 1.8906rem 2.5rem;
   background: var(--light-v1);
   box-shadow: 0 0 20px 3px rgba(137, 144,163, 0.2);
   border-radius: 10px;
   padding: 30px 37px;
+
+  @media(${device.laptop}) {
+    margin: 0 30px 30px 16px;
+  }
+
+  @media(${device.desktop}) {
+    margin: 0 43px 43px 32px;
+  }
+
+  &.login-width {
+    width: calc(97%);
+
+    @media(${device.laptop}) {
+        width: calc(56%);
+    }
+
+    @media(${device.desktop}) {
+      width: calc(36%);
+    }
+  }
+
+  &.register-width {
+    width: calc(100% - 5rem);
+
+    @media(${device.laptop}) {
+      width: calc(63% - 5rem);
+    }
+
+    @media(${device.desktop}) {
+      width: calc(43% - 5rem);
+    }
+  }
 `;
 
 export const Tabs = styled.div`
@@ -50,27 +82,3 @@ export const TabPanel = styled.div`
     width: 100%;
 `;
 
-export const Rectangle = styled.div`
-    position: relative;
-    overflow: hidden;
-    width: 100vw;
-    height: 51vh;
-    bottom: 430px;
-    z-index: -1;
-
-    &.custom-box {
-        bottom: 381px;
-    }
-`;
-
-export const Box = styled.div`
-    width: 657px;
-    height: 657px;
-    transform: rotate(-46.69deg);
-    background: var(--primary-light-v1);
-    border-radius: 20px;
-    z-index: -1;
-    position: absolute;
-    top: 140px;
-    left: 105px;
-`;
