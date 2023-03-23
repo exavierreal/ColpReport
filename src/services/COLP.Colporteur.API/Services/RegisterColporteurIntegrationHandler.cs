@@ -17,12 +17,24 @@ namespace COLP.Person.API.Services
             _bus = bus;
         }
 
+        private void SetResponder()
+        {
+            _bus.RespondAsync<RegisteredUserIntegrationEvent, ResponseMessage>(async request => await RegisterColporteur(request));
+
+            _bus.advancedBus.Connected += OnConnect;
+        }
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-             _bus.RespondAsync<RegisteredUserIntegrationEvent, ResponseMessage>(async request => await RegisterColporteur(request));
+            SetResponder();
 
             return Task.CompletedTask;
-            }
+        }
+
+        private void OnConnect(object s, EventArgs e)
+        {
+            _bus.RespondAsync<RegisteredUserIntegrationEvent, ResponseMessage>(async request => await RegisterColporteur(request));
+        }
 
         private async Task<ResponseMessage> RegisterColporteur(RegisteredUserIntegrationEvent message)
         {
