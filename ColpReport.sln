@@ -57,7 +57,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COLP.MessageBus", "src\buil
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{150E0EA9-F1E8-480B-9B86-12DD8C5852C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COLP.Images.API", "src\services\COLP.Images.API\COLP.Images.API\COLP.Images.API.csproj", "{44CD0D7F-4A07-4954-AF8B-BFBAD894CC2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COLP.Images.API", "src\services\COLP.Images.API\COLP.Images.API\COLP.Images.API.csproj", "{44CD0D7F-4A07-4954-AF8B-BFBAD894CC2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
