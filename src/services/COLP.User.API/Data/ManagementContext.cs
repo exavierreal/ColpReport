@@ -1,11 +1,12 @@
-﻿using COLP.Core.Messages;
+﻿using COLP.Core.Data;
+using COLP.Core.Messages;
 using COLP.Management.API.Models;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace COLP.Management.API.Data
 {
-    public class ManagementContext : DbContext
+    public class ManagementContext : DbContext, IUnitOfWork
     {
         public ManagementContext(DbContextOptions<ManagementContext> options) : base(options)
         {
@@ -25,5 +26,9 @@ namespace COLP.Management.API.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ManagementContext).Assembly);
         }
 
+        public async Task<bool> Commit()
+        {
+            return await base.SaveChangesAsync() > 0;
+        }
     }
 }

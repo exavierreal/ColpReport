@@ -13,10 +13,11 @@ namespace COLP.Management.API.Models
 
         protected Team() { }
 
-        public Team(Guid id, string name)
+        public Team(Guid id, string name, Guid associationId)
         {
             Id = id;
             Name = name;
+            AssociationId = associationId;
         }
         
     }

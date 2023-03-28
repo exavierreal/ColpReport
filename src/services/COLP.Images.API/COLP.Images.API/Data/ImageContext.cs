@@ -1,11 +1,12 @@
-﻿using COLP.Core.Messages;
+﻿using COLP.Core.Data;
+using COLP.Core.Messages;
 using COLP.Images.API.Models;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace COLP.Images.API.Data
 {
-    public class ImageContext : DbContext
+    public class ImageContext : DbContext, IUnitOfWork
     {
         public ImageContext(DbContextOptions<ImageContext> options) : base(options) { }
 
@@ -20,6 +21,11 @@ namespace COLP.Images.API.Data
             modelBuilder.Ignore<ValidationResult>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ImageContext).Assembly);
+        }
+
+        public async Task<bool> Commit()
+        {
+            return await base.SaveChangesAsync() > 0;
         }
     }
 }
