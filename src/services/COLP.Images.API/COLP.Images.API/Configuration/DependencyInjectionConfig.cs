@@ -2,6 +2,7 @@
 using COLP.Images.API.Application.Commands;
 using COLP.Images.API.Data;
 using COLP.Images.API.Data.Repository;
+using COLP.Images.API.Services;
 using FluentValidation.Results;
 using MediatR;
 
@@ -15,6 +16,7 @@ namespace COLP.Images.API.Configuration
             services.AddScoped<IRequestHandler<SaveImageCommand, ValidationResult>, ImageCommandHandler>();
 
             services.AddScoped<IImageRepository, ImageRepository>();
+            services.AddScoped<IImageService, ImageService>();
             services.AddScoped<ImageContext>();
         }
     }

@@ -1,16 +1,26 @@
+using COLP.Identity.API.Configuration;
 using COLP.Management.API.Configuration;
 using COLP.Management.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
+var AllowSpecificOrigins = "_allowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: AllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://127.0.0.1:5173").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+        }
+    );
+});
 
 builder.Services.AddDbContext<ManagementContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -23,6 +33,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 DependencyInjectionConfig.RegisterServices(builder.Services);
+builder.Services.AddMessageBusConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
@@ -30,12 +41,17 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    });
 }
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors(AllowSpecificOrigins);
 
 app.MapControllers();
 
