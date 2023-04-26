@@ -19,6 +19,11 @@ namespace COLP.Images.API.Data.Repository
             _context.Image.Add(image);
         }
 
+        public Image GetById(Guid id)
+        {
+            return _context.Image.Where(x => x.Id == id).FirstOrDefault();
+        }
+
         public void Dispose()
         {
             _context.Dispose();

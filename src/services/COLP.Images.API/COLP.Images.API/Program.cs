@@ -2,6 +2,8 @@ using COLP.Images.API.Configuration;
 using COLP.Images.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using MediatR;
+using COLP.Person.API.Configuration;
 
 var AllowSpecificOrigins = "_allowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -34,7 +36,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
 DependencyInjectionConfig.RegisterServices(builder.Services);
+builder.Services.AddMessageBusConfiguration(builder.Configuration);
+builder.Services.AddMediatR(typeof(Program));
 
 var app = builder.Build();
 

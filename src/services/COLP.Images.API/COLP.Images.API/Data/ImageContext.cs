@@ -1,6 +1,8 @@
 ﻿using COLP.Core.Data;
+using COLP.Core.Mediator;
 using COLP.Core.Messages;
 using COLP.Images.API.Models;
+using COLP.Person.API.Data.Extensions;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +10,14 @@ namespace COLP.Images.API.Data
 {
     public class ImageContext : DbContext, IUnitOfWork
     {
-        public ImageContext(DbContextOptions<ImageContext> options) : base(options) { }
+        private readonly IMediatorHandler _mediatorHandler;
+
+        public ImageContext(DbContextOptions<ImageContext> options, IMediatorHandler mediatorHandler) : base(options)
+        {
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            ChangeTracker.AutoDetectChangesEnabled = false;
+            _mediatorHandler = mediatorHandler;
+        }
 
         public DbSet<Image> Image { get; set; }
 
@@ -25,7 +34,11 @@ namespace COLP.Images.API.Data
 
         public async Task<bool> Commit()
         {
-            return await base.SaveChangesAsync() > 0;
+            var success = await base.SaveChangesAsync() > 0;
+
+            if (success) await _mediatorHandler.PublishEvents(this);
+
+            return success;
         }
     }
 }

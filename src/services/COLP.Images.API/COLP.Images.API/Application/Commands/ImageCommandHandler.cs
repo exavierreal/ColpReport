@@ -1,4 +1,5 @@
 ﻿using COLP.Core.Messages;
+using COLP.Images.API.Application.Events;
 using COLP.Images.API.Data.Repository;
 using COLP.Images.API.Models;
 using FluentValidation.Results;
@@ -37,6 +38,8 @@ namespace COLP.Images.API.Application.Commands
             }
             
             _imageRepository.Add(image);
+
+            image.AddEvent(new SavedImageEvent(request.Id, request.FileName, request.ImageData));
 
             return await SaveChanges(_imageRepository.UnitOfWork);
         }
