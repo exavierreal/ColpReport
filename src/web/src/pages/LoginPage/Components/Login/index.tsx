@@ -1,7 +1,6 @@
 import { Icon } from "@iconify-icon/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import * as yup from "yup";
-import { AlmostThereModal } from "../../../AlmostThereModal";
 import { useLoginApi } from "../../Api/useAuthApi";
 import { UserLogin } from "../../interfaces/UserLogin";
 import { useLoading } from "../Shared/Loading";
@@ -13,7 +12,7 @@ export function Login() {
     const [errorMessage, setErrorMessage] = useState("");
     const [userLogin, setUserLogin] = useState<UserLogin>({email: '', password: ''});
 
-    const { login, isLoading, showModal, handleModalClose, error } = useLoginApi();
+    const { login, isLoading, error } = useLoginApi();
     const { handleLoading } = useLoading();
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
@@ -94,8 +93,6 @@ export function Login() {
                     Esqueci minha senha.
                 </ForgotPassword>
             </Form>
-
-            {showModal && <AlmostThereModal onClose={handleModalClose} />}
         </>
     );
 }

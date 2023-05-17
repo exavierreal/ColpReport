@@ -47,6 +47,7 @@ namespace COLP.MessageBus
         {
             TryConnect();
             return await _bus.Rpc.RequestAsync<TRequest, TResponse>(request);
+            
         }
 
         public void SubscribeAsync<T>(string subscriptionId, Func<T, Task> onMessage) where T : class

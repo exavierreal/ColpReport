@@ -14,6 +14,9 @@ namespace COLP.Management.API.Data
         }
 
         public DbSet<Team> Teams { get; set; }
+        public DbSet<Union> Unions { get; set; }
+        public DbSet<Association> Associations { get; set; }
+        public DbSet<Division> Divisions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

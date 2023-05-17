@@ -1,14 +1,19 @@
 :root {
     --primary-v1: #55C9C9;
     --primary-v2: #79D4D4;
+    --primary-v3: #35D7CD;
     --primary-light-v1: #BAF0F3;
     --danger-v1: #E97B7B;
+    --danger-v2: #F29797;
     --info-v1: #2B65AC;
     --dark-v1: #3D4754;
     --dark-v2: #8990A3;
     --light-v1: #FEFEFE;
+    --light-v2: #E5E5E5;
     --gray-v1: #B9B9B9;
-    --gray-v2: #D4D4D4;
+    --gray-v2: #C4C4C4;
+    --gray-light-v1: #D4D4D4;
+    --gray-light-v2: #D9D9D9;
 }
 
 * {

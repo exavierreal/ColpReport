@@ -20,7 +20,7 @@ export const Circle = styled.i`
     width: 47px;
     height: 47px;
     border-radius: 50%;
-    border: 4px solid var(--gray-v2);
+    border: 4px solid var(--gray-light-v1);
     z-index: 2;
 `;
 

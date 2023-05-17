@@ -85,8 +85,8 @@ export const Label = styled.label`
     height: 100%;
     pointer-events: none;
     margin-right: -10px;
-    border-bottom: 1px solid var(--gray-v2);
-    color: var(--gray-v2);
+    border-bottom: 1px solid var(--gray-light-v1);
+    color: var(--gray-light-v1);
 
     &::after {
         content: "";
