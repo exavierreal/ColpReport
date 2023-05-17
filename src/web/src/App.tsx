@@ -1,15 +1,20 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useState } from 'react'
 import { LoginPage } from './pages/LoginPage'
+import { routes } from './routes';
 
 const queryClient = new QueryClient();
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <QueryClientProvider client={queryClient}>
-      <LoginPage />
+      <BrowserRouter>
+        <Routes>
+          { routes.map((route, index) => (
+            <Route key={index} path={route.path} element={<route.component />} />
+          )) }
+        </Routes>
+      </BrowserRouter>
     </QueryClientProvider>
   )
 }

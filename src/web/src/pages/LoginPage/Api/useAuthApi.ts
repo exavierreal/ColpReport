@@ -26,12 +26,11 @@ export const useRegisterApi = () => {
 }
 
 export const useLoginApi = () => {
-    const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState("");
 
     const { mutate, isLoading } = useMutation(login, {
         onSuccess: data => {
-            setShowModal(true);
+            
         },
         onError: (response: AxiosError) => {
             if (response.response?.data?.errors?.Messages)
@@ -41,15 +40,10 @@ export const useLoginApi = () => {
                 setError(response.response?.data?.errors?.Password[0]);
         }
     })
-
-    const handleModalClose = () => setShowModal(false);
-    
-    
+       
     return {
         login: mutate,
         isLoading,
-        showModal,
-        handleModalClose,
         error
     }
 }

@@ -1,0 +1,8 @@
+.icon {
+    color: var(--gray-v2);
+    cursor: pointer;
+}
+
+.empty {
+    width: 20px;
+}
