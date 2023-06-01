@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace COLP.Management.API.Data.Mappings
 {
-    public class UnionMapping : IEntityTypeConfiguration<Union>
+    public class UnionMapping : IEntityTypeConfiguration<UnionModel>
     {
-        public void Configure(EntityTypeBuilder<Union> builder)
+        public void Configure(EntityTypeBuilder<UnionModel> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).IsRequired().HasColumnType("varchar(600)");

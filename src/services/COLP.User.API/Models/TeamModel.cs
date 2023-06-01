@@ -3,17 +3,17 @@ using COLP.Images.API.Models;
 
 namespace COLP.Management.API.Models
 {
-    public class Team : Entity, IAggregateRoot
+    public class TeamModel : Entity, IAggregateRoot
     {
         public string Name { get; private set; }
         public Guid ImageId { get; private set; }
         public Image Image { get; private set; }
         public Guid AssociationId { get; private set; }
-        public Association Association { get; private set; }
+        public AssociationModel Association { get; private set; }
 
-        protected Team() { }
+        protected TeamModel() { }
 
-        public Team(Guid id, string name, Guid associationId, Guid imageId)
+        public TeamModel(Guid id, string name, Guid associationId, Guid imageId)
         {
             Id = id;
             Name = name;

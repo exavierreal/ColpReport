@@ -1,9 +1,11 @@
 ﻿using COLP.Core.Controllers;
-using COLP.Management.API.Services;
+using COLP.Management.API.Services.Union;
+using COLP.Management.API.ViewModels.Union;
 using Microsoft.AspNetCore.Mvc;
 
 namespace COLP.Management.API.Controllers
 {
+    [Route("api/[controller]")]
     public class UnionController : MainController
     {
         private readonly IUnionService _service;
@@ -13,12 +15,19 @@ namespace COLP.Management.API.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetUnionSuggestion(string filter)
+        [HttpGet("get-union-suggestions")]
+        public async Task<ActionResult> GetUnionsSuggestions(string filter = "")
         {
-            var unions = _service.GetUnionsByFilter(filter);
+            var unions = await _service.GetUnionsByFilter(filter);
 
-            return await Task.FromResult(Ok(unions));
+            var unionViewModels = unions.Select(u => new UnionSuggestionsViewModel
+            {
+                Id = u.Id,
+                Name = u.Name,
+                Acronym = u.Acronym
+            });
+
+            return Ok(unionViewModels);
         }
     }
 }

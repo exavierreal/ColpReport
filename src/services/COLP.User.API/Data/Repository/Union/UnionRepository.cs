@@ -2,7 +2,7 @@
 using COLP.Management.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace COLP.Management.API.Data.Repository
+namespace COLP.Management.API.Data.Repository.Union
 {
     public class UnionRepository : IUnionRepository
     {
@@ -15,9 +15,9 @@ namespace COLP.Management.API.Data.Repository
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public async Task<IEnumerable<Union>> GetUnionsByFilter(string filter)
+        public async Task<IEnumerable<UnionModel>> GetUnionsByFilter(string filter)
         {
-            return await _context.Unions.Where(u => EF.Functions.Like(u.Acronym, filter)).ToListAsync();
+            return await _context.Unions.Where(u => u.Acronym.Contains(filter) || u.Name.Contains(filter)).ToListAsync();
         }
 
         public void Dispose()

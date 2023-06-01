@@ -1,7 +1,7 @@
 ﻿using COLP.Core.Data;
 using COLP.Management.API.Models;
 
-namespace COLP.Management.API.Data.Repository
+namespace COLP.Management.API.Data.Repository.Team
 {
     public class TeamRepository : ITeamRepository
     {
@@ -14,7 +14,7 @@ namespace COLP.Management.API.Data.Repository
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public void Insert(Team team)
+        public void Insert(TeamModel team)
         {
             _context.Add(team);
         }

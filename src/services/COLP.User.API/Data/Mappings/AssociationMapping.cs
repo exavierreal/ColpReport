@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace COLP.Management.API.Data.Mappings
 {
-    public class AssociationMapping : IEntityTypeConfiguration<Association>
+    public class AssociationMapping : IEntityTypeConfiguration<AssociationModel>
     {
-        public void Configure(EntityTypeBuilder<Association> builder)
+        public void Configure(EntityTypeBuilder<AssociationModel> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).IsRequired().HasColumnType("varchar(600)");
