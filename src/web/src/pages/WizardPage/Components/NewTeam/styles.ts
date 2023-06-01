@@ -92,6 +92,7 @@ export const Input = styled.div`
     display: flex;
     flex-direction: column;
     margin-bottom: 18px;
+    position: relative;
 
     label {
         width: 100%;
@@ -129,4 +130,36 @@ export const GoalButton = styled.button`
     color: #FFFFFF;
     margin-bottom: 28px;
     cursor: pointer;
+`;
+
+export const ContainerDataList = styled.div`
+    position: relative;
+    width: 100%;
+
+    input {
+        width: 100%;
+    }
+`;
+
+export const DataList = styled.ul`
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    list-style-type: none;
+    border: 1px solid var(--gray-v2);
+    border-top: none;
+    background: #FFFFFF;
+    box-shadow: 0 0 20px 3px rgba(137, 144, 162, .2);
+    cursor: pointer;
+`;
+
+export const DataListItem = styled.li<{ selected: boolean; isKeyboardFocused: boolean }>`
+    padding: 5px 13px;
+    background-color: ${(props) => props.selected ? 'var(--primary-light-v1)' : 'transparent'};
+
+    &:hover {
+        background: ${(props) => (props.isKeyboardFocused ? 'transparent' : 'var(--primary-light-v1)')}
+    }
 `;

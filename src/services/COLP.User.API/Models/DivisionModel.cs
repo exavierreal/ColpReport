@@ -2,15 +2,15 @@
 
 namespace COLP.Management.API.Models
 {
-    public class Division : Entity, IAggregateRoot
+    public class DivisionModel : Entity, IAggregateRoot
     {
         public string Name { get; private set; }
         public string Acronym { get; private set; }
-        public List<Union> Unions { get; private set; }
+        public List<UnionModel> Unions { get; private set; }
 
-        protected Division() { }
+        protected DivisionModel() { }
 
-        public Division(string name, string acronym)
+        public DivisionModel(string name, string acronym)
         {
             Name = name;
             Acronym = acronym;

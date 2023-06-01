@@ -1,9 +1,8 @@
-﻿using COLP.Management.API.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace COLP.Management.API.DTOs
+namespace COLP.Management.API.ViewModels.Team
 {
-    public class TeamDto
+    public class TeamViewModel
     {
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string Name { get; set; }
@@ -12,7 +11,7 @@ namespace COLP.Management.API.DTOs
         public Guid AssociationId { get; set; }
 
         public string FileName { get; set; }
-        
+
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string ImageData { get; set; }
     }

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace COLP.Management.API.Data.Mappings
 {
-    public class TeamMapping : IEntityTypeConfiguration<Team>
+    public class TeamMapping : IEntityTypeConfiguration<TeamModel>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Team> builder)
+        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<TeamModel> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).IsRequired().HasColumnType("varchar(255)");

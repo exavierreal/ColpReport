@@ -1,14 +1,15 @@
 ﻿using COLP.Core.Controllers;
 using COLP.Core.Messages.Integration;
 using COLP.Images.API.Integration;
-using COLP.Management.API.DTOs;
 using COLP.Management.API.Models;
-using COLP.Management.API.Services;
+using COLP.Management.API.Services.Team;
+using COLP.Management.API.ViewModels.Team;
 using COLP.MessageBus;
 using Microsoft.AspNetCore.Mvc;
 
 namespace COLP.Management.API.Controllers
 {
+    [Route("api/[controller]")]
     public class TeamController : MainController
     {
         private readonly IMessageBus _bus;
@@ -21,7 +22,7 @@ namespace COLP.Management.API.Controllers
         }
 
         [HttpPost("save-team")]
-        public async Task<ActionResult> SaveTeam(TeamDto teamDto)
+        public async Task<ActionResult> SaveTeam(TeamViewModel teamDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -31,7 +32,7 @@ namespace COLP.Management.API.Controllers
             if (!imageResult.ValidationResult.IsValid)
                 return CustomResponse();
 
-            var hasSaved = await _teamService.SaveTeam(new Team(Guid.NewGuid(), teamDto.Name, teamDto.AssociationId, id));
+            var hasSaved = await _teamService.SaveTeam(new TeamModel(Guid.NewGuid(), teamDto.Name, teamDto.AssociationId, id));
 
             if (hasSaved)
                 return CustomResponse(teamDto);
@@ -40,7 +41,7 @@ namespace COLP.Management.API.Controllers
 
         }
 
-        private async Task<ResponseMessage> SaveImage(TeamDto team, Guid id)
+        private async Task<ResponseMessage> SaveImage(TeamViewModel team, Guid id)
         {
             var requestedImage = new RequestedImageIntegrationEvent(id, team.FileName, team.ImageData);
 
