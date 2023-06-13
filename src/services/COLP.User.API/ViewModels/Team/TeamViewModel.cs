@@ -12,7 +12,8 @@ namespace COLP.Management.API.ViewModels.Team
 
         public string FileName { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string ImageData { get; set; }
+
+        public decimal Goal { get; set; }
     }
 }

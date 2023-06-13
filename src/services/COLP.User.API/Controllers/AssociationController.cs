@@ -16,9 +16,11 @@ namespace COLP.Management.API.Controllers
         }
 
         [HttpGet("get-association-suggestions")]
-        public async Task<ActionResult> GetAssociationsSuggestions(string filter)
+        public async Task<ActionResult> GetAssociationsSuggestions(string filter, Guid unionId)
         {
-            var associations = await _service.GetAssociationsByFilter(filter);
+            filter = filter ?? "";
+
+            var associations = await _service.GetAssociationsByFilter(filter, unionId);
 
             var associationViewModels = associations.Select(a => new AssociationSuggestionsViewModel
             {

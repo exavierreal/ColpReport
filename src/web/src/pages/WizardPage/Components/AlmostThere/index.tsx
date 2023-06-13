@@ -7,7 +7,7 @@ import { Container, Content, Heading } from "./styles";
 export function AlmostThere(props: WizardProps) {
     return (
         <Container>
-            <HeaderBar title="Bem-Vindo" leftIcon="close" />
+            <HeaderBar handleClick={props.handlePageWizard} title="Bem-Vindo" leftIcon="close" />
 
             <Content>
                 <Heading>

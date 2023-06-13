@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
 `;
 
-export const Content = styled.div`
+export const Content = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -48,6 +48,13 @@ export const MainImage = styled.button`
 
     .user-icon {
         color: var(--gray-v1);
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 1px solid var(--gray-v2);
     }
 `;
 
@@ -113,6 +120,10 @@ export const Input = styled.div`
 
         &:focus {
             border: 2px solid var(--primary-v3);
+        }
+
+        &.input-error {
+            border: 2px solid var(--danger-v2);
         }
     }
 

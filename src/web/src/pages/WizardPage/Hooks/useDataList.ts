@@ -1,27 +1,48 @@
 import { useState, KeyboardEvent, FocusEvent } from "react";
-import { getUnionSuggestions } from "../Api/useTeamApi";
+import { getAssociationSuggestion, getUnionSuggestions } from "../Api/useTeamApi";
+import { UnionSuggestions } from "../Interfaces/UnionSuggestions";
+import { AssociationSuggestion } from "../Interfaces/AssociationSuggestion";
 
 export function useDataList() {
     const [isUnionInputFocused, setIsUnionInputFocused] = useState(false);
     const [isAssociationInputFocused, setIsAssociationInputFocused] = useState(false);
     
-    const [selectedUnion, setSelectedUnion] = useState<string>('');
-    const [selectedAssociation, setSelectedAssociation] = useState<string>('');
+    const [selectedUnion, setSelectedUnion] = useState<UnionSuggestions | null>();
+    const [selectedAssociation, setSelectedAssociation] = useState<AssociationSuggestion | null>();
     
-    const [unionOptions, setUnionOptions] = useState<string[]>(['']);
-    const [associationOptions, setAssociationOptions] = useState<string[]>(['APV - Associação Paulista do Vale', 'ACP - Associação Central Paranaense']);
+    const [unionOptions, setUnionOptions] = useState<UnionSuggestions[]>([]);
+    const [associationOptions, setAssociationOptions] = useState<AssociationSuggestion[]>([]);
+
+    const [displayUnionSelected, setDisplayUnionSelected] = useState<string>('');
+    const [displayedAssociationSelected, setDisplayedAssociationSelected] = useState<string>('');
     
     const [selectedUnionIndex, setSelectedUnionIndex] = useState(-1);
     const [selectedAssociationIndex, setSelectedAssociationIndex] = useState(-1);
     
-    const [keyboardFocusIndex, setKeyboardFocusIndex] = useState(-1);   
-    
+    const [keyboardFocusIndex, setKeyboardFocusIndex] = useState(-1);
 
-    function handleInputChange(isUnion: boolean, event: React.ChangeEvent<HTMLInputElement>) {
+    async function handleInputChange(isUnion: boolean, event: React.ChangeEvent<HTMLInputElement>) {
         const { value } = event.target;
-        isUnion ? setSelectedUnion(value) : setSelectedAssociation(value);
+        
+        if (isUnion) {
+            setSelectedUnion(null);
+            setDisplayUnionSelected(value);
+            setIsUnionInputFocused(true);
+            const data = await getUnionSuggestions(value);
+            const options = data.map(item => item);
+            setUnionOptions(options);
+        }
+        else {
+            setSelectedAssociation(null);
+            setDisplayedAssociationSelected(value);
 
-        debugger;
+            if (selectedUnion) {
+                setIsAssociationInputFocused(true);
+                const data = await getAssociationSuggestion(value, selectedUnion.id);
+                const options = data.map(item => item);
+                setAssociationOptions(options)
+            }
+        }
     }
 
     function handleKeyOnInput(isUnion: boolean, event: KeyboardEvent<HTMLInputElement>) {
@@ -45,6 +66,7 @@ export function useDataList() {
                     if (selectedUnionIndex !== -1) {
                         const selectedOption = unionOptions[selectedUnionIndex]
                         setSelectedUnion(selectedOption);
+                        setDisplayUnionSelected(`${selectedOption.acronym} - ${selectedOption.name}`)
                     }
                     setIsUnionInputFocused(false);
                     setSelectedUnionIndex(-1);
@@ -53,6 +75,7 @@ export function useDataList() {
                     if (selectedAssociationIndex !== -1) {
                         const selectedOption = associationOptions[selectedAssociationIndex]
                         setSelectedAssociation(selectedOption);
+                        setDisplayedAssociationSelected(`${selectedOption.acronym} - ${selectedOption.name}`);
                     }
                     setIsAssociationInputFocused(false);
                     setSelectedAssociationIndex(-1);
@@ -69,9 +92,16 @@ export function useDataList() {
         if (isUnion) {
             setIsUnionInputFocused(true);
             const data = await getUnionSuggestions("");
-
-            const formattedOptions = data.map((item) => `${item.acronym} - ${item.name}`);
-            setUnionOptions(formattedOptions);
+            const options = data.map(item => item);
+            setUnionOptions(options);
+        }
+        else {
+            if (selectedUnion) {
+                setIsAssociationInputFocused(true);
+                const data = await getAssociationSuggestion("", selectedUnion.id);
+                const options = data.map(item => item);
+                setAssociationOptions(options);
+            }
         }
     }
 
@@ -86,23 +116,15 @@ export function useDataList() {
         }
     }
 
-    function handleOptionClick(isUnion: boolean, option: string, optionIndex: number, event: React.MouseEvent<HTMLLIElement>) {
+    function handleOptionClick(isUnion: boolean, option: UnionSuggestions, optionIndex: number, event: React.MouseEvent<HTMLLIElement>) {
         event.stopPropagation();
 
-        debugger;
-
-        if (option)  
-            isUnion ? setSelectedUnion(option) : setSelectedAssociation(option);
-
-        if(isUnion) {
-            setIsUnionInputFocused(false);
-            setSelectedUnionIndex(optionIndex);
-        }
-        else {
-            setIsAssociationInputFocused(false);
-            setSelectedAssociationIndex(optionIndex);
-        }
-        
+        const selectedOption = isUnion ? unionOptions[optionIndex] : associationOptions[optionIndex];
+        isUnion ? setSelectedUnion(selectedOption) : setSelectedAssociation(selectedOption);
+        isUnion ? setDisplayUnionSelected(`${option.acronym} - ${option.name}`) : setDisplayedAssociationSelected(`${option.acronym} - ${option.name}`);
+        isUnion ? setIsUnionInputFocused(false) : setIsAssociationInputFocused(false);
+        isUnion ? setSelectedUnionIndex(optionIndex) : setSelectedAssociationIndex(optionIndex);
+            
         setKeyboardFocusIndex(-1);
     }
 
@@ -116,6 +138,8 @@ export function useDataList() {
         selectedAssociation,
         selectedUnionIndex,
         selectedAssociationIndex,
+        displayUnionSelected,
+        displayedAssociationSelected,
         handleInputFocus,
         handleInputBlur,
         handleInputChange,

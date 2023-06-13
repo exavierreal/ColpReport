@@ -32,9 +32,9 @@ namespace COLP.Management.API.Controllers
             if (!imageResult.ValidationResult.IsValid)
                 return CustomResponse();
 
-            var hasSaved = await _teamService.SaveTeam(new TeamModel(Guid.NewGuid(), teamDto.Name, teamDto.AssociationId, id));
+            var hasTeamSaved = await _teamService.SaveTeam(new TeamModel(Guid.NewGuid(), teamDto.Name, teamDto.AssociationId, id));
 
-            if (hasSaved)
+            if (hasTeamSaved)
                 return CustomResponse(teamDto);
 
             return CustomResponse();

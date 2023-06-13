@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 export function useImage() {
     const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -24,17 +24,14 @@ export function useImage() {
             }
     
             reader.readAsDataURL(file);
-            onImageUpload(file);
         }
     }
 
-    function handleButtonClick() {
+    function handleButtonClick(event: FormEvent) {
+        event.preventDefault();
+
         if (inputRef.current)
             inputRef.current.click();
-    }
-    
-    function onImageUpload(file: File) {
-            
     }
 
     return {
