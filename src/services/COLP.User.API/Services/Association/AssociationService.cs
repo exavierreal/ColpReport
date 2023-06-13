@@ -12,9 +12,9 @@ namespace COLP.Management.API.Services.Association
             _repository = repository;
         }
 
-        public async Task<IEnumerable<AssociationModel>> GetAssociationsByFilter(string filter)
+        public async Task<IEnumerable<AssociationModel>> GetAssociationsByFilter(string filter, Guid unionId)
         {
-            return await _repository.GetAssociationsByFilter(filter);
+            return await _repository.GetAssociationsByFilter(filter, unionId);
         }
     }
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, KeyboardEvent, MouseEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify-icon/react";
 import { HeaderBar } from "../../../../shared/Components/HeaderBar";
 import { CameraIcon, Container, ContainerDataList, Content, DataList, DataListItem, Form, GoalButton, Input, Logo, MainImage, Subheading, TeamFormBox } from "./styles";
@@ -7,21 +7,160 @@ import { ActionButtons } from "../../../../shared/Components/Buttons/ActionButto
 import { WizardProps } from "../../Interfaces/WizardProps";
 import { useImage } from "../../Hooks/useImage";
 import { useDataList } from "../../Hooks/useDataList";
+import { GoalModal } from "../GoalModal";
+import { useNavigate } from "react-router-dom";
+import { CancelModal } from "../../../../shared/Components/Modals/CancelModal";
+import { Team } from "../../Interfaces/Team";
+import { UnionSuggestions } from "../../Interfaces/UnionSuggestions";
 
 
 export function NewTeam(props: WizardProps) {
+    const navigate = useNavigate();
+
     const [isTeamSaved, setIsTeamSaved] = useState(false);
+    const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+    const [emptyInputs, setEmptyInputs] = useState<string[]>([]);
+    const [team, setTeam] = useState<Team>({ profileImage: '', teamName: '', unionId: '', associationId: '', goal: 0 });
+
+    const teamNameInputRef = useRef<HTMLInputElement>(null);
+    const unionInputRef = useRef<HTMLInputElement>(null);
+    const associationInputRef = useRef<HTMLInputElement>(null);
+    
     const { previewImage, inputRef, handleImageUpload, handleButtonClick } = useImage();
-    const { isUnionInputFocused, isAssociationInputFocused, setIsAssociationInputFocused, handleInputFocus, handleInputBlur,
-            selectedUnion, selectedAssociation, handleInputChange, handleKeyOnInput, handleMouseEnter, handleOptionClick,
-            selectedUnionIndex, selectedAssociationIndex, keyboardFocusIndex, unionOptions, associationOptions
+    const {  handleInputFocus, handleInputBlur, handleInputChange, handleKeyOnInput, handleMouseEnter, handleOptionClick,
+        isUnionInputFocused, isAssociationInputFocused, keyboardFocusIndex, unionOptions, associationOptions,
+        selectedUnion, selectedAssociation, selectedUnionIndex, selectedAssociationIndex, displayUnionSelected, displayedAssociationSelected
     } = useDataList();
+
+    useEffect(() => {
+        setTeam((prevTeam) => {
+            let updateTeam = { ...prevTeam }
+
+            if (selectedUnion) {
+                updateTeam.unionId = selectedUnion.id;
+
+                if (emptyInputs.includes("union"))
+                    setEmptyInputs((prevEmptyInputs) => prevEmptyInputs.filter((input) => input !== "union"));
+            } else {
+                if (!emptyInputs.includes("union"))
+                    setEmptyInputs((prevEmptyInputs) => [...prevEmptyInputs, "union"])
+            }
+
+            if (selectedAssociation) {
+                updateTeam.associationId = selectedAssociation.id;
+
+                if (emptyInputs.includes("association"))
+                    setEmptyInputs((prevEmptyInputs) => prevEmptyInputs.filter((input) => input !== "association"));
+            } else {
+                if (!emptyInputs.includes("association"))
+                    setEmptyInputs((prevEmptyInputs) => [...prevEmptyInputs, "association"])
+            }
+
+            if (previewImage)
+                updateTeam.profileImage = previewImage.split(",")[1];
+
+            return updateTeam;
+        })
+    }, [selectedUnion, selectedAssociation, previewImage]);
+    
+    function handleTeamInputChange(e: ChangeEvent<HTMLInputElement>) {
+        const teamName = e.target.value;
+
+        removeErrorStyle("team-name");
+        
+        if (teamName.trim().length < 2) {
+            if (!emptyInputs.includes("team-name"))
+                setEmptyInputs((prevEmptyInputs) => [...prevEmptyInputs, "team-name"])
+        }
+        else
+            setEmptyInputs((prevEmptyInputs) => prevEmptyInputs.filter((input) => input !== "team-name"));
+
+        setTeam({ ...team, teamName: teamName });
+    }
+
+    function handleDatalist(isUnion: boolean, event: ChangeEvent<HTMLInputElement> | KeyboardEvent<HTMLInputElement> | MouseEvent<HTMLLIElement>, action: string, option?: UnionSuggestions, index?: number) {
+        switch(action) {
+            case "change":
+                isUnion ? removeErrorStyle("union") : removeErrorStyle("association");
+                handleInputChange(isUnion, event as ChangeEvent<HTMLInputElement>);
+                break;
+            case "keydown":
+                isUnion ? removeErrorStyle("union") : removeErrorStyle("association");
+                handleKeyOnInput(isUnion, event as KeyboardEvent<HTMLInputElement>)
+                break;
+            case "click":
+                isUnion ? removeErrorStyle("union") : removeErrorStyle("association");
+                handleOptionClick(isUnion, option as UnionSuggestions, index as number, event as MouseEvent<HTMLLIElement>)
+                break;
+        }
+    }
+
+    function handleToggleGoalModal (e?: FormEvent) {
+        if (e)
+            e.preventDefault();
+        
+        setIsGoalModalOpen(!isGoalModalOpen);
+    }
+
+    function handleSaveGoal(value: number) {
+        setTeam({ ...team, goal: value });
+    }
+
+    function handleCancel (choice?: string) {
+        setIsCancelModalOpen(!isCancelModalOpen);
+
+        if (choice === "yes")
+            navigate("/");
+    }
+
+    function handleSubmit (e: FormEvent) {
+        e.preventDefault();
+        
+        if (validateTeam())
+            console.log(team);
+
+        return;
+    }
+
+    function validateTeam() {
+        let hasError = false;
+
+        if (emptyInputs.includes("team-name") || team.teamName === "") {
+            teamNameInputRef.current?.classList.add("input-error");
+            hasError = true;
+        }
+        if (emptyInputs.includes("union")) {
+            unionInputRef.current?.classList.add("input-error");
+            hasError = true;
+        }
+        if (emptyInputs.includes("association")) {
+            associationInputRef.current?.classList.add("input-error");
+            hasError = true;
+        }
+
+        return !hasError;
+    }
+
+    function removeErrorStyle(inputName: string) {
+        switch(inputName) {
+            case "team-name":
+                teamNameInputRef.current?.classList.contains("input-error") && teamNameInputRef.current?.classList.remove("input-error")
+                break;
+            case "union":
+                unionInputRef.current?.classList.contains("input-error") && unionInputRef.current?.classList.remove("input-error")
+                break;
+            case "association":
+                associationInputRef.current?.classList.contains("input-error") && associationInputRef.current?.classList.remove("input-error")
+                break;
+        }
+    }
 
     return (
         <Container>
             <HeaderBar handleClick={props.handlePageWizard} title="Nova Equipe" leftIcon="back" rightIcon={isTeamSaved ? "next" : ""} />
 
-            <Content>
+            <Content onSubmit={handleSubmit}>
                 <TeamFormBox>
                     <Logo>
                         <MainImage onClick={handleButtonClick}>
@@ -42,54 +181,71 @@ export function NewTeam(props: WizardProps) {
                     <Form>
                         <Input>
                             <label>Equipe:</label>
-                            <input type="text" />
+                            <input onChange={handleTeamInputChange} type="text" ref={teamNameInputRef} />
                         </Input>
                         <Input>
                             <label>União:</label>
                             <ContainerDataList onFocus={() => handleInputFocus(true)} onBlur={() => handleInputBlur(true)}>
                                 <input
+                                    ref={unionInputRef}
                                     type="text"
-                                    value={selectedUnion}
-                                    onKeyDown={(event) => handleKeyOnInput(true, event)}
-                                    onChange={(event) => handleInputChange(true, event)}
+                                    value={displayUnionSelected}
+                                    onKeyDown={(event) => handleDatalist(true, event, "keydown")}
+                                    onChange={(event) => handleDatalist(true, event, "change")}
                                 />
-                                {selectedUnion.length > 0 && isUnionInputFocused && (
+                                {isUnionInputFocused && (
                                     <DataList>
-                                        {unionOptions.filter((option) => option.toLowerCase().includes(selectedUnion.toLowerCase())).map((option, index) => (
-                                                <DataListItem
-                                                    key={option}
-                                                    selected={index === selectedUnionIndex}
-                                                    isKeyboardFocused={index === keyboardFocusIndex}
-                                                    onMouseDown={(event) => handleOptionClick(true, option, index, event)}
-                                                    onMouseEnter={() => handleMouseEnter(index)}
-                                                    >
-                                                        {option}
-                                                </DataListItem>
-                                            ))}
+                                        {unionOptions.filter(
+                                            (option) =>
+                                                (!selectedUnion ||
+                                                    option.name.toLowerCase().includes(selectedUnion.name.toLowerCase()) ||
+                                                    option.acronym.toLowerCase().includes(selectedUnion.acronym.toLowerCase()))
+                                        )
+                                        .slice(0, 4)
+                                        .map((option, index) => (
+                                            <DataListItem
+                                                key={option.id}
+                                                selected={index === selectedUnionIndex}
+                                                isKeyboardFocused={index === keyboardFocusIndex}
+                                                onMouseDown={(event) => handleDatalist(true, event, "click", option, index)}
+                                                onMouseEnter={() => handleMouseEnter(index)}
+                                                >
+                                                    {option.acronym} - {option.name}
+                                            </DataListItem>
+                                        ))}
                                     </DataList>
                                 )}
                             </ContainerDataList>
                         </Input>
                         <Input>
                             <label>Associação:</label>
-                            <ContainerDataList onFocus={() => setIsAssociationInputFocused(true)} onBlur={() => handleInputBlur(false)}>
+                            <ContainerDataList onFocus={() => handleInputFocus(false)} onBlur={() => handleInputBlur(false)}>
                                 <input
+                                    ref={associationInputRef}
                                     type="text"
-                                    value={selectedAssociation}
-                                    onKeyDown={(event) => handleKeyOnInput(false, event)}
-                                    onChange={(event) => handleInputChange(false, event)}
+                                    value={displayedAssociationSelected}
+                                    onKeyDown={(event) => handleDatalist(false, event, "keydown")}
+                                    onChange={(event) => handleDatalist(false, event, "change")}
                                 />
-                                {selectedAssociation.length > 0 && isAssociationInputFocused && (
+                                {isAssociationInputFocused && (
                                     <DataList>
-                                        {associationOptions.filter((option) => option.toLowerCase().includes(selectedAssociation.toLowerCase())).map((option, index) => (
-                                            <DataListItem
-                                                key={option}
-                                                selected={index === selectedAssociationIndex}
-                                                isKeyboardFocused={index === keyboardFocusIndex}
-                                                onMouseDown={(event) => handleOptionClick(false, option, index, event)}
-                                                onMouseEnter={() => handleMouseEnter(index)}
-                                            >
-                                                    {option}
+                                        {associationOptions.filter(
+                                            (option) =>
+                                                (!selectedAssociation ||
+                                                    option.name.toLowerCase().includes(selectedAssociation.name.toLowerCase()) ||
+                                                    option.acronym.toLowerCase().includes(selectedAssociation.acronym.toLowerCase())
+                                                )
+                                            )
+                                            .slice(0, 4)
+                                            .map((option, index) => (
+                                                <DataListItem
+                                                    key={option.id}
+                                                    selected={index === selectedAssociationIndex}
+                                                    isKeyboardFocused={index === keyboardFocusIndex}
+                                                    onMouseDown={(event) => handleDatalist(false, event, "click", option, index)}
+                                                    onMouseEnter={() => handleMouseEnter(index)}
+                                                >
+                                                    {option.acronym} - {option.name}
                                             </DataListItem>
                                         ))}
                                     </DataList>
@@ -98,13 +254,16 @@ export function NewTeam(props: WizardProps) {
                         </Input>
                     </Form>
 
-                    <GoalButton>Definir Meta</GoalButton>
+                    <GoalButton onClick={handleToggleGoalModal}>Definir Meta</GoalButton>
 
                     <ProgressBar index={props.index} />
                 </TeamFormBox>
 
-                <ActionButtons />
+                <ActionButtons onCancel={handleCancel} />
             </Content>
+
+            { isGoalModalOpen && <GoalModal onCloseModal={handleToggleGoalModal} onSaveGoal={handleSaveGoal} initialValue={team.goal} /> }
+            { isCancelModalOpen && <CancelModal onCancelConfirm={handleCancel} /> }
         </Container>
     );
 }

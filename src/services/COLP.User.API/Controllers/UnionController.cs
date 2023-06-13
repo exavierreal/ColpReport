@@ -16,8 +16,10 @@ namespace COLP.Management.API.Controllers
         }
 
         [HttpGet("get-union-suggestions")]
-        public async Task<ActionResult> GetUnionsSuggestions(string filter = "")
+        public async Task<ActionResult> GetUnionsSuggestions(string filter)
         {
+            filter = filter ?? "";
+
             var unions = await _service.GetUnionsByFilter(filter);
 
             var unionViewModels = unions.Select(u => new UnionSuggestionsViewModel

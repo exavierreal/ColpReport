@@ -15,9 +15,9 @@ namespace COLP.Management.API.Data.Repository.Association
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public async Task<IEnumerable<AssociationModel>> GetAssociationsByFilter(string filter)
+        public async Task<IEnumerable<AssociationModel>> GetAssociationsByFilter(string filter, Guid unionId)
         {
-            return await _context.Associations.Where(a => a.Acronym.Contains(filter) || a.Name.Contains(filter)).ToListAsync();
+            return await _context.Associations.Where(a => a.UnionId == unionId && (a.Acronym.Contains(filter) || a.Name.Contains(filter))).ToListAsync();
         }
 
         public void Dispose()
