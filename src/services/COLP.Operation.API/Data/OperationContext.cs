@@ -2,24 +2,24 @@
 using COLP.Core.Extensions;
 using COLP.Core.Mediator;
 using COLP.Core.Messages;
-using COLP.Images.API.Models;
+using COLP.Operation.API.Models;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
-namespace COLP.Images.API.Data
+namespace COLP.Operation.API.Data
 {
-    public class ImageContext : DbContext, IUnitOfWork
+    public class OperationContext : DbContext, IUnitOfWork
     {
         private readonly IMediatorHandler _mediatorHandler;
 
-        public ImageContext(DbContextOptions<ImageContext> options, IMediatorHandler mediatorHandler) : base(options)
+        public OperationContext(DbContextOptions<OperationContext> options, IMediatorHandler mediatorHandler) : base(options)
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             ChangeTracker.AutoDetectChangesEnabled = false;
             _mediatorHandler = mediatorHandler;
         }
 
-        public DbSet<Image> Image { get; set; }
+        public DbSet<Goal> Goals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,7 +29,7 @@ namespace COLP.Images.API.Data
             modelBuilder.Ignore<Event>();
             modelBuilder.Ignore<ValidationResult>();
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ImageContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(OperationContext).Assembly);
         }
 
         public async Task<bool> Commit()

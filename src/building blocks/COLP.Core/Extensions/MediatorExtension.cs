@@ -2,7 +2,7 @@
 using COLP.Core.Mediator;
 using Microsoft.EntityFrameworkCore;
 
-namespace COLP.Person.API.Data.Extensions
+namespace COLP.Core.Extensions
 {
     public static class MediatorExtension
     {

@@ -5,6 +5,7 @@ using COLP.Management.API.Models;
 using COLP.Management.API.Services.Team;
 using COLP.Management.API.ViewModels.Team;
 using COLP.MessageBus;
+using COLP.Operation.API.Integration;
 using Microsoft.AspNetCore.Mvc;
 
 namespace COLP.Management.API.Controllers
@@ -25,18 +26,35 @@ namespace COLP.Management.API.Controllers
         public async Task<ActionResult> SaveTeam(TeamViewModel teamDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
+            
+            var imageId = Guid.Empty;
+            ResponseMessage imageResult;
 
-            var id = Guid.NewGuid();
-            var imageResult = await SaveImage(teamDto, id);
+            if (teamDto.ImageData != null)
+            {
+                imageId = Guid.NewGuid();
+                imageResult = await SaveImage(teamDto, imageId);
+                
+                if (!imageResult.ValidationResult.IsValid)
+                    return CustomResponse();
+            }
 
-            if (!imageResult.ValidationResult.IsValid)
-                return CustomResponse();
+            var teamId = Guid.NewGuid();
 
-            var hasTeamSaved = await _teamService.SaveTeam(new TeamModel(Guid.NewGuid(), teamDto.Name, teamDto.AssociationId, id));
+            var hasTeamSaved = imageId != Guid.Empty ?
+                                    await _teamService.SaveTeam(new Team(teamId, teamDto.Name, teamDto.AssociationId, imageId)) :
+                                    await _teamService.SaveTeam(new Team(teamId, teamDto.Name, teamDto.AssociationId, null));
 
             if (hasTeamSaved)
-                return CustomResponse(teamDto);
+            {
+                var goalResult = await SaveGoal(teamDto.Goal, teamId);
 
+                if (!goalResult.ValidationResult.IsValid)
+                    return CustomResponse();
+
+                return CustomResponse(teamDto);
+            }
+            
             return CustomResponse();
 
         }
@@ -48,6 +66,21 @@ namespace COLP.Management.API.Controllers
             try
             {
                 return await _bus.RequestAsync<RequestedImageIntegrationEvent, ResponseMessage>(requestedImage);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private async Task<ResponseMessage> SaveGoal(decimal value, Guid teamId)
+        {
+            var goalName = "Meta Inicial";
+            var requestedGoal = new RequestedGoalIntegrationEvent(teamId, value, goalName, teamId, null);
+
+            try
+            {
+                return await _bus.RequestAsync<RequestedGoalIntegrationEvent, ResponseMessage>(requestedGoal);
             }
             catch
             {

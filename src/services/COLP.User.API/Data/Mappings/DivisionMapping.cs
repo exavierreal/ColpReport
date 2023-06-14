@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace COLP.Management.API.Data.Mappings
 {
-    public class DivisionMapping : IEntityTypeConfiguration<DivisionModel>
+    public class DivisionMapping : IEntityTypeConfiguration<Division>
     {
-        public void Configure(EntityTypeBuilder<DivisionModel> builder)
+        public void Configure(EntityTypeBuilder<Division> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).IsRequired().HasColumnType("varchar(600)");

@@ -3,9 +3,9 @@ using COLP.Management.API.Models;
 
 namespace COLP.Management.API.Data.Repository.Team
 {
-    public interface ITeamRepository : IRepository<TeamModel>
+    public interface ITeamRepository : IRepository<Models.Team>
     {
-        void Insert(TeamModel team);
+        void Insert(Models.Team team);
     }
 }
 

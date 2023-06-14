@@ -1,4 +1,3 @@
-using COLP.Identity.API.Configuration;
 using COLP.Management.API.Configuration;
 using COLP.Management.API.Data;
 using Microsoft.EntityFrameworkCore;

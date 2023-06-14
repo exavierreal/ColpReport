@@ -12,7 +12,7 @@ namespace COLP.Management.API.Services.Union
             _repository = repository;
         }
 
-        public Task<IEnumerable<UnionModel>> GetUnionsByFilter(string filter)
+        public Task<IEnumerable<Models.Union>> GetUnionsByFilter(string filter)
         {
             return _repository.GetUnionsByFilter(filter);
         }

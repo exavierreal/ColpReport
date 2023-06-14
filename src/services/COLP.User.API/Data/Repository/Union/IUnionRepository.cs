@@ -3,8 +3,8 @@ using COLP.Management.API.Models;
 
 namespace COLP.Management.API.Data.Repository.Union
 {
-    public interface IUnionRepository : IRepository<UnionModel>
+    public interface IUnionRepository : IRepository<Models.Union>
     {
-        Task<IEnumerable<UnionModel>> GetUnionsByFilter(string filter);
+        Task<IEnumerable<Models.Union>> GetUnionsByFilter(string filter);
     }
 }

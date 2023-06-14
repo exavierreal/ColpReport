@@ -8,15 +8,12 @@ namespace COLP.Management.API.Data
 {
     public class ManagementContext : DbContext, IUnitOfWork
     {
-        public ManagementContext(DbContextOptions<ManagementContext> options) : base(options)
-        {
+        public ManagementContext(DbContextOptions<ManagementContext> options) : base(options) {}
 
-        }
-
-        public DbSet<TeamModel> Teams { get; set; }
-        public DbSet<UnionModel> Unions { get; set; }
-        public DbSet<AssociationModel> Associations { get; set; }
-        public DbSet<DivisionModel> Divisions { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<Union> Unions { get; set; }
+        public DbSet<Association> Associations { get; set; }
+        public DbSet<Division> Divisions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

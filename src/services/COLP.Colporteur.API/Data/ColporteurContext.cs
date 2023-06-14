@@ -1,7 +1,7 @@
 ﻿using COLP.Core.Data;
+using COLP.Core.Extensions;
 using COLP.Core.Mediator;
 using COLP.Core.Messages;
-using COLP.Person.API.Data.Extensions;
 using COLP.Person.API.Models;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;

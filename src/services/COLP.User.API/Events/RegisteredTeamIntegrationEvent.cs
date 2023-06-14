@@ -6,9 +6,9 @@ namespace COLP.Management.API.Events
     {
         public Guid Id { get; private set; }
         public string Name { get; private set; }
-        public AssociationModel Association { get; private set; }
+        public Association Association { get; private set; }
 
-        public RegisteredTeamIntegrationEvent(Guid id, string name, AssociationModel association)
+        public RegisteredTeamIntegrationEvent(Guid id, string name, Association association)
         {
             Id = id;
             Name = name;
