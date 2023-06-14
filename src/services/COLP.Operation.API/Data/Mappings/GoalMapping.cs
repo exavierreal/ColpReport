@@ -1,5 +1,4 @@
 ﻿using COLP.Operation.API.Models;
-using COLP.Person.API.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
