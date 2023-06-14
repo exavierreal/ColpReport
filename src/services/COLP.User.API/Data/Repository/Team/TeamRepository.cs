@@ -14,7 +14,7 @@ namespace COLP.Management.API.Data.Repository.Team
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public void Insert(TeamModel team)
+        public void Insert(Models.Team team)
         {
             _context.Add(team);
         }

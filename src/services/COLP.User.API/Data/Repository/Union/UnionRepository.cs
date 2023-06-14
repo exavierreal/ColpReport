@@ -15,7 +15,7 @@ namespace COLP.Management.API.Data.Repository.Union
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public async Task<IEnumerable<UnionModel>> GetUnionsByFilter(string filter)
+        public async Task<IEnumerable<Models.Union>> GetUnionsByFilter(string filter)
         {
             return await _context.Unions.Where(u => u.Acronym.Contains(filter) || u.Name.Contains(filter)).ToListAsync();
         }

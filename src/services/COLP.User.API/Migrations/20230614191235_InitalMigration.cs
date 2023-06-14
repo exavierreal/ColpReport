@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace COLP.Management.API.Migrations
 {
-    public partial class Management : Migration
+    public partial class InitalMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -63,25 +63,12 @@ namespace COLP.Management.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Image",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Filename = table.Column<string>(type: "varchar(100)", nullable: true),
-                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Image", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Team",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "varchar(255)", nullable: false),
-                    ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AssociationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -93,19 +80,55 @@ namespace COLP.Management.API.Migrations
                         principalTable: "Association",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Goal",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "varchar(100)", nullable: true),
+                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Goal", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Team_Image_Id",
-                        column: x => x.ImageId,
-                        principalTable: "Image",
+                        name: "FK_Goal_Team_TeamId",
+                        column: x => x.TeamId,
+                        principalTable: "Team",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Image",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Filename = table.Column<string>(type: "varchar(100)", nullable: true),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Image", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Image_Team_Id",
+                        column: x => x.Id,
+                        principalTable: "Team",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Association_UnionId",
                 table: "Association",
                 column: "UnionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Goal_TeamId",
+                table: "Goal",
+                column: "TeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Team_AssociationId",
@@ -120,6 +143,9 @@ namespace COLP.Management.API.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Goal");
+
             migrationBuilder.DropTable(
                 name: "Image");
 

@@ -12,7 +12,7 @@ namespace COLP.Management.API.Services.Team
             _repository = repository;
         }
 
-        public async Task<bool> SaveTeam(TeamModel team)
+        public async Task<bool> SaveTeam(Models.Team team)
         {
             _repository.Insert(team);
 

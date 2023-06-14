@@ -1,7 +1,7 @@
 ﻿using COLP.Core.Data;
+using COLP.Core.Extensions;
 using COLP.Core.Mediator;
 using COLP.Core.Messages;
-using COLP.Person.API.Data.Extensions;
 using COLP.Person.API.Models;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +32,11 @@ namespace COLP.Person.API.Data
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
+
+            modelBuilder.Entity<Colporteur>()
+                .HasOne(c => c.Goal)
+                .WithMany()
+                .HasForeignKey(c => c.GoalId);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ColporteurContext).Assembly);
         }
