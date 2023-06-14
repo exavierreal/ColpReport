@@ -11,8 +11,7 @@ namespace COLP.Management.API.Models
         public Image Image { get; private set; }
         public Guid AssociationId { get; private set; }
         public Association Association { get; private set; }
-        public Guid GoalId { get; private set; }
-        public Goal Goal { get; private set; }
+        public ICollection<Goal> Goals { get; private set; }
 
         protected Team() { }
 

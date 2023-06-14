@@ -90,7 +90,7 @@ namespace COLP.Management.API.Migrations
                     b.Property<Guid>("AssociationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ImageId")
+                    b.Property<Guid?>("ImageId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -126,6 +126,28 @@ namespace COLP.Management.API.Migrations
                     b.HasIndex("DivisionId");
 
                     b.ToTable("Union", (string)null);
+                });
+
+            modelBuilder.Entity("COLP.Operation.API.Models.Goal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Goal");
                 });
 
             modelBuilder.Entity("COLP.Images.API.Models.Image", b =>
@@ -170,6 +192,13 @@ namespace COLP.Management.API.Migrations
                     b.Navigation("Division");
                 });
 
+            modelBuilder.Entity("COLP.Operation.API.Models.Goal", b =>
+                {
+                    b.HasOne("COLP.Management.API.Models.Team", null)
+                        .WithMany("Goals")
+                        .HasForeignKey("TeamId");
+                });
+
             modelBuilder.Entity("COLP.Management.API.Models.Association", b =>
                 {
                     b.Navigation("Teams");
@@ -182,6 +211,8 @@ namespace COLP.Management.API.Migrations
 
             modelBuilder.Entity("COLP.Management.API.Models.Team", b =>
                 {
+                    b.Navigation("Goals");
+
                     b.Navigation("Image");
                 });
 

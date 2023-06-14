@@ -6,6 +6,7 @@ namespace COLP.Operation.API.Models
     {
         public string Name { get; private set; }
         public decimal Value { get; private set; }
+        public Guid? TeamId { get; private set; }
 
         public Goal(decimal value, string name)
         {

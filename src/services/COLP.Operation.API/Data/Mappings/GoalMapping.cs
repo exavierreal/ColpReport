@@ -9,8 +9,8 @@ namespace COLP.Operation.API.Data.Mappings
         public void Configure(EntityTypeBuilder<Goal> builder)
         {
             builder.HasKey(x => x.Id);
-            
-            //builder.HasOne<Colporteur>(x => x.ColporteurId)
+            builder.Property(x => x.Value).IsRequired().HasColumnType("decimal(10,2)");
+            builder.Property(x => x.Name).IsRequired();
         }
     }
 }

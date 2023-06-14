@@ -19,12 +19,12 @@ namespace COLP.Operation.API.Data
             _mediatorHandler = mediatorHandler;
         }
 
-        public DbSet<Goal> Goals { get; set; }
+        public DbSet<Goal> Goal { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetProperties().Where(p => p.ClrType == typeof(string))))
-                property.SetColumnType("varchar(100");
+                property.SetColumnType("varchar(100)");
 
             modelBuilder.Ignore<Event>();
             modelBuilder.Ignore<ValidationResult>();

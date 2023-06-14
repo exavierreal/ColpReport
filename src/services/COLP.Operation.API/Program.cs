@@ -1,5 +1,6 @@
 using COLP.Operation.API.Configuration;
 using COLP.Operation.API.Data;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -35,6 +36,7 @@ builder.Services.AddSwaggerGen(c =>
 
 DependencyInjectionConfig.RegisterServices(builder.Services);
 builder.Services.AddMessageBusConfiguration(builder.Configuration);
+builder.Services.AddMediatR(typeof(Program));
 
 var app = builder.Build();
 
