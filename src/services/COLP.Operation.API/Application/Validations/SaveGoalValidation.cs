@@ -7,9 +7,9 @@ namespace COLP.Operation.API.Application.Validations
     {
         public SaveGoalValidation()
         {
-            RuleFor(x => x.AggregateId)
-                .NotEqual(Guid.Empty)
-                .WithMessage("Id da pessoa inválido");
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .WithMessage("Nome inválido");
 
             RuleFor(x => x.Value)
                 .Must(value => value >= 0)

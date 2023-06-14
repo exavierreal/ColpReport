@@ -1,4 +1,5 @@
 ﻿using COLP.Core.DomainObjects;
+using COLP.Operation.API.Models;
 
 namespace COLP.Person.API.Models
 {
@@ -12,6 +13,8 @@ namespace COLP.Person.API.Models
         public string ShirtSize { get; private set; }
         public bool isActive { get; private set; }
         public ColporteurAddress Address { get; private set; }
+        public Guid GoalId { get; private set; }
+        public Goal Goal { get; private set; }
 
         protected Colporteur() { }
 

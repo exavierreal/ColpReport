@@ -4,16 +4,13 @@ namespace COLP.Operation.API.Application.Events
 {
     public class SavedGoalEvent : Event
     {
-        public Guid? TeamId { get; private set; }
-        public Guid? ColporteurId { get; private set; }
         public decimal Value { get; private set; }
+        public string Name { get; private set; }
 
-        public SavedGoalEvent(Guid aggregateId, decimal value, Guid? teamId, Guid? colporteurId)
+        public SavedGoalEvent(decimal value, string name)
         {
-            AggregateId = aggregateId;
-            TeamId = teamId;
-            ColporteurId = colporteurId;
             Value = value;
+            Name = name;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace COLP.Management.API.Controllers
 
             if (hasTeamSaved)
             {
-                var goalResult = await SaveGoal(teamDto.Goal, teamId);
+                var goalResult = await SaveGoal(teamDto.Goal);
 
                 if (!goalResult.ValidationResult.IsValid)
                     return CustomResponse();
@@ -73,10 +73,10 @@ namespace COLP.Management.API.Controllers
             }
         }
 
-        private async Task<ResponseMessage> SaveGoal(decimal value, Guid teamId)
+        private async Task<ResponseMessage> SaveGoal(decimal value)
         {
             var goalName = "Meta Inicial";
-            var requestedGoal = new RequestedGoalIntegrationEvent(teamId, value, goalName, teamId, null);
+            var requestedGoal = new RequestedGoalIntegrationEvent(value, goalName);
 
             try
             {

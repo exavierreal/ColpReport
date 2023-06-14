@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\building blocks\COLP.MessageBus\COLP.MessageBus.csproj" />
-    <ProjectReference Include="..\COLP.Colporteur.API\COLP.Person.API.csproj" />
   </ItemGroup>
 
 </Project>

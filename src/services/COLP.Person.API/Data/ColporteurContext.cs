@@ -33,6 +33,11 @@ namespace COLP.Person.API.Data
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
+            modelBuilder.Entity<Colporteur>()
+                .HasOne(c => c.Goal)
+                .WithMany()
+                .HasForeignKey(c => c.GoalId);
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ColporteurContext).Assembly);
         }
 

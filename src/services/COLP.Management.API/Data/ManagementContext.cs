@@ -20,6 +20,11 @@ namespace COLP.Management.API.Data
             foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetProperties().Where(p => p.ClrType == typeof(string))))
                 property.SetColumnType("varchar(100)");
 
+            modelBuilder.Entity<Team>()
+                .HasOne(t => t.Goal)
+                .WithMany()
+                .HasForeignKey(t => t.GoalId);
+
             modelBuilder.Ignore<Event>();
             modelBuilder.Ignore<ValidationResult>();
 
