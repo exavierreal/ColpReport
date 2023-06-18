@@ -27,7 +27,7 @@ namespace COLP.Images.API.Application.Commands
             }
             
             byte[] fileData = Convert.FromBase64String(request.ImageData);
-            var image = new Image(request.Id, request.FileName, fileData);
+            var image = new Image(request.Id, request.FileName, fileData, request.IsProfileImageActive);
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
             var extension = Path.GetExtension(request.FileName);
 
@@ -39,7 +39,7 @@ namespace COLP.Images.API.Application.Commands
             
             _imageRepository.Add(image);
 
-            image.AddEvent(new SavedImageEvent(request.Id, request.FileName, request.ImageData));
+            image.AddEvent(new SavedImageEvent(request.Id, request.FileName, request.ImageData, request.IsProfileImageActive));
 
             return await SaveChanges(_imageRepository.UnitOfWork);
         }

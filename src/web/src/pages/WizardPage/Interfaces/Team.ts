@@ -1,6 +1,7 @@
 export interface Team {
-    profileImage?: string | undefined;
-    teamName: string;
+//    fileName?: string | undefined;
+    imageData?: string | undefined;
+    name: string;
     unionId?: string;
     associationId?: string;
     goal: number;

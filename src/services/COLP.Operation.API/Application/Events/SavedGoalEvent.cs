@@ -6,11 +6,15 @@ namespace COLP.Operation.API.Application.Events
     {
         public decimal Value { get; private set; }
         public string Name { get; private set; }
+        public Guid? TeamId { get; private set; }
+        public Guid? GoalId { get; private set; }
 
-        public SavedGoalEvent(decimal value, string name)
+        public SavedGoalEvent(decimal value, string name, Guid? teamId, Guid? goalId)
         {
             Value = value;
             Name = name;
+            TeamId = teamId;
+            GoalId = goalId;
         }
     }
 }

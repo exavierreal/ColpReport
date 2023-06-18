@@ -20,11 +20,11 @@ namespace COLP.Operation.API.Application.Commands
         {
             if (!request.IsValid()) return request.ValidationResult;
 
-            var goal = new Goal(request.Value, request.Name);
+            var goal = new Goal(request.Value, request.Name, request.TeamId, request.GoalId);
 
             _goalRepository.Add(goal);
 
-            goal.AddEvent(new SavedGoalEvent(request.Value, request.Name));
+            goal.AddEvent(new SavedGoalEvent(request.Value, request.Name, request.TeamId, request.GoalId));
 
             return await SaveChanges(_goalRepository.UnitOfWork);
         }

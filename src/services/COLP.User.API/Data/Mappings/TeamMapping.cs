@@ -13,7 +13,7 @@ namespace COLP.Management.API.Data.Mappings
             builder.Property(x => x.Name).IsRequired().HasColumnType("varchar(255)");
 
             builder.HasOne(x => x.Association).WithMany(x => x.Teams);
-            builder.HasOne(x => x.Image).WithOne().HasForeignKey<Image>(x => x.Id);
+            builder.HasOne(x => x.Image).WithMany().HasForeignKey(x => x.ImageId).HasPrincipalKey(x => x.Id).OnDelete(DeleteBehavior.SetNull);
 
             builder.HasMany(x => x.Goals).WithOne().HasForeignKey("TeamId");
 

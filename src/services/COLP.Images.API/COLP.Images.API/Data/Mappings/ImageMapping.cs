@@ -11,6 +11,7 @@ namespace COLP.Images.API.Data.Mappings
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Filename).IsRequired().HasColumnType("varchar(255)");
             builder.Property(x => x.ImageData).IsRequired().HasColumnType("varbinary(200000000)").HasConversion(x => x, x => x);
+            builder.Property(x => x.IsProfileImageActive).HasColumnType("bit");
         }
     }
 }

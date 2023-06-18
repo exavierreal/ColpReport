@@ -18,7 +18,7 @@ export function HeaderBarIcon (props: HeaderBarIconProps) {
         case 'back':
             return <Icon onClick={() => props.handleClick(true)} icon="akar-icons:arrow-left" width="30" className="icon" />
         case 'next':
-            return <Icon icon="akar-icons:arrow-right" width="30" className="icon" />
+            return <Icon onClick={() => props.handleClick(false)} icon="akar-icons:arrow-right" width="30" className="icon" />
         default:
             return <i className="empty"></i>
     }

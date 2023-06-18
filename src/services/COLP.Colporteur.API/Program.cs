@@ -25,13 +25,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 #endregion
 
-//#region Identity and Auth Configuration
-//builder.Services.AddDefaultIdentity<IdentityUser>()
-//    .AddRoles<IdentityRole>()
-//    .AddErrorDescriber<IdentityMessagesPortuguese>()
-//    .AddEntityFrameworkStores<ApplicationDbContext>()
-//    .AddDefaultTokenProviders();
-
 authConfig.AddJwtConfiguration(builder);
 //#endregion
 

@@ -7,11 +7,15 @@ namespace COLP.Operation.API.Application.Commands
     {
         public decimal Value { get; private set; }
         public string Name { get; private set; }
+        public Guid? TeamId { get; private set; }
+        public Guid? GoalId { get; private set; }
 
-        public SaveGoalCommand(decimal value, string name)
+        public SaveGoalCommand(decimal value, string name, Guid? teamId, Guid? goalId)
         {
             Value = value;
             Name = name;
+            TeamId = teamId;
+            GoalId = goalId;
         }
 
         public override bool IsValid()

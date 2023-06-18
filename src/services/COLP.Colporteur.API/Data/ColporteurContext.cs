@@ -33,22 +33,23 @@ namespace COLP.Person.API.Data
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
-            modelBuilder.Entity<Colporteur>()
-                .HasOne(c => c.Goal)
-                .WithMany()
-                .HasForeignKey(c => c.GoalId);
-
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ColporteurContext).Assembly);
         }
 
         public async Task<bool> Commit()
         {
-            var success = await base.SaveChangesAsync() > 0;
+            try { 
+                var success = await base.SaveChangesAsync() > 0;
             
-            if (success)
-                await _mediatorHandler.PublishEvents(this);
+                if (success)
+                    await _mediatorHandler.PublishEvents(this);
 
-            return success;
+                return success;
+                }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

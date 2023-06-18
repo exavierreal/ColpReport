@@ -39,7 +39,7 @@ namespace COLP.Images.API.Services
 
         private async Task<ResponseMessage> SaveImage(RequestedImageIntegrationEvent message)
         {
-            var imageCommand = new SaveImageCommand(message.Id, message.Filename, message.ImageData);
+            var imageCommand = new SaveImageCommand(message.Id, message.Filename, message.ImageData, message.IsProfileImageActive);
             ValidationResult hasSuccessOnSaveImage;
 
             using (var scope = _serviceProvider.CreateScope())
