@@ -29,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\building blocks\COLP.Core\COLP.Core.csproj" />
     <ProjectReference Include="..\..\building blocks\COLP.MessageBus\COLP.MessageBus.csproj" />
+    <ProjectReference Include="..\..\building blocks\COLP.WebAPI.Core\COLP.WebAPI.Core.csproj" />
     <ProjectReference Include="..\COLP.Images.API\COLP.Images.API\COLP.Images.API.csproj" />
     <ProjectReference Include="..\COLP.Operation.API\COLP.Operation.API.csproj" />
   </ItemGroup>

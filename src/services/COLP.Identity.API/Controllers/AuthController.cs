@@ -19,13 +19,15 @@ namespace COLP.Identity.API.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppSettings _appSettings;
         private readonly IMessageBus _bus;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings, IMessageBus bus)
+        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<AppSettings> appSettings, IMessageBus bus)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _roleManager = roleManager;
             _appSettings = appSettings.Value;
             _bus = bus;
         }
@@ -55,6 +57,8 @@ namespace COLP.Identity.API.Controllers
                     await _userManager.DeleteAsync(user);
                     return CustomResponse(userResult.ValidationResult);
                 }
+
+                await _userManager.AddToRoleAsync(user, "Leader");
 
                 return CustomResponse(await GenerateToken(userRegister.Email!));
             }
@@ -93,28 +97,22 @@ namespace COLP.Identity.API.Controllers
         private async Task<UserResponseLogin> GenerateToken(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
+            var role = await _userManager.GetRolesAsync(user);
             var claims = await _userManager.GetClaimsAsync(user);
 
-            var identityClaims = await GetUserClaims(claims, user);
+            var identityClaims = GetUserClaims(claims, user);
             var encodedToken = EncodeCode(identityClaims);
 
-            return GetTokenResponse(encodedToken, user, claims);
+            return await GetTokenResponse(encodedToken, user, claims, role);
         }
 
-        private async Task<ClaimsIdentity> GetUserClaims(ICollection<Claim> claims, IdentityUser user)
+        private ClaimsIdentity GetUserClaims(ICollection<Claim> claims, IdentityUser user)
         {
-            var userRoles = await _userManager.GetRolesAsync(user);
-
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
-
-            foreach (var userRole in userRoles)
-            {
-                claims.Add(new Claim("role", userRole));
-            }
 
             var identityClaims = new ClaimsIdentity();
             identityClaims.AddClaims(claims);
@@ -139,22 +137,42 @@ namespace COLP.Identity.API.Controllers
             return tokenHandler.WriteToken(token);
         }
 
-        private UserResponseLogin GetTokenResponse(string encodedToken, IdentityUser user, IEnumerable<Claim> claims)
+        private async Task<UserResponseLogin> GetTokenResponse(string encodedToken, IdentityUser user, IEnumerable<Claim> claims, IEnumerable<string> roleNames)
         {
+            var userToken = new UserToken
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Roles = new List<UserRoles>(),
+                Claims = claims.Select(c => new UserClaim { Type = c.Type, Value = c.Value})
+            };
+
+            foreach (var roleName in roleNames)
+            {
+                var role = await _roleManager.FindByNameAsync(roleName);
+
+                if (role != null)
+                {
+                    var roleClaims = await _roleManager.GetClaimsAsync(role);
+                    var userRole = new UserRoles
+                    {
+                        Name = roleName,
+                        Claims = roleClaims.Select(c => new UserClaim
+                        {
+                            Type = c.Type,
+                            Value = c.Value
+                        })
+                    };
+
+                    userToken.Roles.Add(userRole);
+                }
+            }
+
             return new UserResponseLogin
             {
                 AcessToken = encodedToken,
                 ExpiresIn = TimeSpan.FromHours(_appSettings.ExpirationInHours).TotalSeconds,
-                UserToken = new UserToken
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Claims = claims.Select(c => new UserClaim
-                    {
-                        Type = c.Type,
-                        Value = c.Value
-                    })
-                }
+                UserToken = userToken
             };
         }
 

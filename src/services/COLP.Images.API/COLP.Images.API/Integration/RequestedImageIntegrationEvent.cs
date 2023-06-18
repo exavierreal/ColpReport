@@ -7,12 +7,14 @@ namespace COLP.Images.API.Integration
         public Guid Id { get; private set; }
         public string Filename { get; private set; }
         public string ImageData { get; private set; }
+        public bool IsProfileImageActive { get; private set; }
 
-        public RequestedImageIntegrationEvent(Guid id, string filename, string imageData)
+        public RequestedImageIntegrationEvent(Guid id, string filename, string imageData, bool isProfileImageActive)
         {
             Id = id;
             Filename = filename;
             ImageData = imageData;
+            IsProfileImageActive = isProfileImageActive;
         }
     }
 }

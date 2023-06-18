@@ -38,7 +38,7 @@ namespace COLP.Images.API.Data
 
             if (success) await _mediatorHandler.PublishEvents(this);
 
-            return success;
+            return success;            
         }
     }
 }

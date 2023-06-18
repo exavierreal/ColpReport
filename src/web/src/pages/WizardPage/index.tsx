@@ -12,6 +12,8 @@ export function WizardPage() {
     function handlePageWizard (userHasBack: boolean) {
         var valueOfIndex = userHasBack ? indexPageWizard - 1 : indexPageWizard + 1;
 
+        debugger;
+
         setIndexPageWizard(valueOfIndex);
     }
 

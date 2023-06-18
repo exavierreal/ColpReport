@@ -6,6 +6,7 @@ using COLP.Management.API.Services.Team;
 using COLP.Management.API.ViewModels.Team;
 using COLP.MessageBus;
 using COLP.Operation.API.Integration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace COLP.Management.API.Controllers
@@ -22,6 +23,7 @@ namespace COLP.Management.API.Controllers
             _teamService = teamService;
         }
 
+        [Authorize]
         [HttpPost("save-team")]
         public async Task<ActionResult> SaveTeam(TeamViewModel teamDto)
         {
@@ -45,9 +47,10 @@ namespace COLP.Management.API.Controllers
                                     await _teamService.SaveTeam(new Team(teamId, teamDto.Name, teamDto.AssociationId, imageId)) :
                                     await _teamService.SaveTeam(new Team(teamId, teamDto.Name, teamDto.AssociationId, null));
 
+            
             if (hasTeamSaved)
             {
-                var goalResult = await SaveGoal(teamDto.Goal);
+                var goalResult = await SaveGoal(teamDto.Goal, teamId);
 
                 if (!goalResult.ValidationResult.IsValid)
                     return CustomResponse();
@@ -61,7 +64,7 @@ namespace COLP.Management.API.Controllers
 
         private async Task<ResponseMessage> SaveImage(TeamViewModel team, Guid id)
         {
-            var requestedImage = new RequestedImageIntegrationEvent(id, team.FileName, team.ImageData);
+            var requestedImage = new RequestedImageIntegrationEvent(id, team.FileName, team.ImageData, true);
 
             try
             {
@@ -73,10 +76,10 @@ namespace COLP.Management.API.Controllers
             }
         }
 
-        private async Task<ResponseMessage> SaveGoal(decimal value)
+        private async Task<ResponseMessage> SaveGoal(decimal value, Guid teamId)
         {
             var goalName = "Meta Inicial";
-            var requestedGoal = new RequestedGoalIntegrationEvent(value, goalName);
+            var requestedGoal = new RequestedGoalIntegrationEvent(value, goalName, teamId, null);
 
             try
             {

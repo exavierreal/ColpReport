@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { User } from "../interfaces/User";
@@ -15,14 +15,23 @@ const login = (userLogin: UserLogin) => {
 }
 
 export const useRegisterApi = () => {
-    return useMutation(registerUser, {
-        onSuccess: data => {
-            console.log(data);
+    const queryClient = useQueryClient();
+
+    const { mutate, isLoading } = useMutation(registerUser, {
+        onSuccess: response => {
+            queryClient.setQueryData(['authToken'], response.data?.accessToken);
+            queryClient.setQueryData(['userRoles'], response.data?.userToken?.roles?.name);
+            console.log(response);
         },
         onError: (response) => {
             console.log(response)
         }
     });
+
+    return {
+        register: mutate,
+        isLoading
+    }
 }
 
 export const useLoginApi = () => {

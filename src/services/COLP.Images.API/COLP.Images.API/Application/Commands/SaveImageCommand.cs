@@ -8,13 +8,15 @@ namespace COLP.Images.API.Application.Commands
         public Guid Id { get; private set; }
         public string FileName { get; private set; }
         public string ImageData { get; private set; }
+        public bool IsProfileImageActive { get; private set; }
 
-        public SaveImageCommand(Guid id, string fileName, string imageData)
+        public SaveImageCommand(Guid id, string fileName, string imageData, bool isProfileImageActive)
         {
             AggregateId = id;
             Id = id;
             FileName = fileName;
             ImageData = imageData;
+            IsProfileImageActive = isProfileImageActive;
         }
 
         public override bool IsValid()

@@ -1,7 +1,7 @@
 ﻿using COLP.Core.Mediator;
 using COLP.Core.Messages.Integration;
-using COLP.MessageBus;
 using COLP.Operation.API.Application.Commands;
+using COLP.MessageBus;
 using FluentValidation.Results;
 
 namespace COLP.Operation.API.Integration
@@ -36,7 +36,7 @@ namespace COLP.Operation.API.Integration
 
         private async Task<ResponseMessage> SaveGoal(RequestedGoalIntegrationEvent message)
         {
-            var goalCommand = new SaveGoalCommand(message.GoalValue, message.Name);
+            var goalCommand = new SaveGoalCommand(message.GoalValue, message.Name, message.TeamId, message.GoalId);
             ValidationResult hasSuccessOnSaveTheGoal;
 
             using (var scope = _serviceProvider.CreateScope())

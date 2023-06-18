@@ -1,11 +1,13 @@
 using COLP.Management.API.Configuration;
 using COLP.Management.API.Data;
+using COLP.WebAPI.Core.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var AllowSpecificOrigins = "_allowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
+AuthConfig authConfig = new();
 
 builder.Services.AddCors(options =>
 {
@@ -31,6 +33,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+authConfig.AddJwtConfiguration(builder);
 DependencyInjectionConfig.RegisterServices(builder.Services);
 builder.Services.AddMessageBusConfiguration(builder.Configuration);
 
@@ -48,7 +51,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+authConfig.UseAuth(app);
 
 app.UseCors(AllowSpecificOrigins);
 

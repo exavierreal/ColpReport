@@ -12,16 +12,16 @@ import { useNavigate } from "react-router-dom";
 import { CancelModal } from "../../../../shared/Components/Modals/CancelModal";
 import { Team } from "../../Interfaces/Team";
 import { UnionSuggestions } from "../../Interfaces/UnionSuggestions";
+import { useSaveTeamApi } from "../../Api/useTeamApi";
 
 
 export function NewTeam(props: WizardProps) {
     const navigate = useNavigate();
 
-    const [isTeamSaved, setIsTeamSaved] = useState(false);
     const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     const [emptyInputs, setEmptyInputs] = useState<string[]>([]);
-    const [team, setTeam] = useState<Team>({ profileImage: '', teamName: '', unionId: '', associationId: '', goal: 0 });
+    const [team, setTeam] = useState<Team>({ imageData: undefined, name: '', unionId: '', associationId: '', goal: 0 });
 
     const teamNameInputRef = useRef<HTMLInputElement>(null);
     const unionInputRef = useRef<HTMLInputElement>(null);
@@ -32,6 +32,8 @@ export function NewTeam(props: WizardProps) {
         isUnionInputFocused, isAssociationInputFocused, keyboardFocusIndex, unionOptions, associationOptions,
         selectedUnion, selectedAssociation, selectedUnionIndex, selectedAssociationIndex, displayUnionSelected, displayedAssociationSelected
     } = useDataList();
+
+    const { saveTeam, isLoading, error, isTeamSaved } = useSaveTeamApi();
 
     useEffect(() => {
         setTeam((prevTeam) => {
@@ -58,7 +60,7 @@ export function NewTeam(props: WizardProps) {
             }
 
             if (previewImage)
-                updateTeam.profileImage = previewImage.split(",")[1];
+                updateTeam.imageData = previewImage.split(",")[1];
 
             return updateTeam;
         })
@@ -76,7 +78,7 @@ export function NewTeam(props: WizardProps) {
         else
             setEmptyInputs((prevEmptyInputs) => prevEmptyInputs.filter((input) => input !== "team-name"));
 
-        setTeam({ ...team, teamName: teamName });
+        setTeam({ ...team, name: teamName });
     }
 
     function handleDatalist(isUnion: boolean, event: ChangeEvent<HTMLInputElement> | KeyboardEvent<HTMLInputElement> | MouseEvent<HTMLLIElement>, action: string, option?: UnionSuggestions, index?: number) {
@@ -118,7 +120,7 @@ export function NewTeam(props: WizardProps) {
         e.preventDefault();
         
         if (validateTeam())
-            console.log(team);
+            saveTeam(team)
 
         return;
     }
@@ -126,7 +128,7 @@ export function NewTeam(props: WizardProps) {
     function validateTeam() {
         let hasError = false;
 
-        if (emptyInputs.includes("team-name") || team.teamName === "") {
+        if (emptyInputs.includes("team-name") || team.name === "") {
             teamNameInputRef.current?.classList.add("input-error");
             hasError = true;
         }
@@ -259,7 +261,7 @@ export function NewTeam(props: WizardProps) {
                     <ProgressBar index={props.index} />
                 </TeamFormBox>
 
-                <ActionButtons onCancel={handleCancel} />
+                <ActionButtons onCancel={handleCancel} saveDisabled={isTeamSaved} />
             </Content>
 
             { isGoalModalOpen && <GoalModal onCloseModal={handleToggleGoalModal} onSaveGoal={handleSaveGoal} initialValue={team.goal} /> }

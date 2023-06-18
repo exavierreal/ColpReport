@@ -7,12 +7,14 @@ namespace COLP.Operation.API.Integration
         public decimal GoalValue { get; private set; }
         public string Name { get; private set; }
         public Guid? TeamId { get; private set; }
+        public Guid? GoalId { get; private set; }
 
-        public RequestedGoalIntegrationEvent(decimal goalValue, string name, Guid? teamId)
+        public RequestedGoalIntegrationEvent(decimal goalValue, string name, Guid? teamId, Guid? goalId)
         {
             GoalValue = goalValue;
             Name = name;
             TeamId = teamId;
+            GoalId = goalId;
         }
     }
 }

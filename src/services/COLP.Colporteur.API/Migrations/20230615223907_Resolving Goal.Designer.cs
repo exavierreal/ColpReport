@@ -12,17 +12,42 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace COLP.Person.API.Migrations
 {
     [DbContext(typeof(ColporteurContext))]
-    [Migration("20221120201313_Colporteur")]
-    partial class Colporteur
+    [Migration("20230615223907_Resolving Goal")]
+    partial class ResolvingGoal
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.11")
+                .HasAnnotation("ProductVersion", "6.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("COLP.Operation.API.Models.Goal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ColporteurId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColporteurId");
+
+                    b.ToTable("Goal");
+                });
 
             modelBuilder.Entity("COLP.Person.API.Models.Colporteur", b =>
                 {
@@ -96,6 +121,13 @@ namespace COLP.Person.API.Migrations
                     b.ToTable("ColporteurAddress", (string)null);
                 });
 
+            modelBuilder.Entity("COLP.Operation.API.Models.Goal", b =>
+                {
+                    b.HasOne("COLP.Person.API.Models.Colporteur", null)
+                        .WithMany("Goals")
+                        .HasForeignKey("ColporteurId");
+                });
+
             modelBuilder.Entity("COLP.Person.API.Models.ColporteurAddress", b =>
                 {
                     b.HasOne("COLP.Person.API.Models.Colporteur", "Colporteur")
@@ -109,6 +141,8 @@ namespace COLP.Person.API.Migrations
             modelBuilder.Entity("COLP.Person.API.Models.Colporteur", b =>
                 {
                     b.Navigation("Address");
+
+                    b.Navigation("Goals");
                 });
 #pragma warning restore 612, 618
         }

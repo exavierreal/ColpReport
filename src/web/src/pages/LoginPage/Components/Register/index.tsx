@@ -13,7 +13,7 @@ export function Register() {
     const [errorMessage, setErrorMessage] = useState("");
     const [user, setUser] = useState<User>({ name: '', lastname: '', email: '', password: '', confirmPassword: '' })
 
-    const { mutate } = useRegisterApi();
+    const { register, isLoading } = useRegisterApi();
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
         const {name, value} = event.target;
@@ -25,9 +25,7 @@ export function Register() {
         e.preventDefault();
 
         if (await validateUser()) {
-            var a = mutate(user);
-
-            debugger;
+            register(user);
         }
     }
 

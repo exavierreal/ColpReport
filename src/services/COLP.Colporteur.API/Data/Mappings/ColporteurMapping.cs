@@ -18,6 +18,7 @@ namespace COLP.Person.API.Data.Mappings
             builder.Property(c => c.isActive).HasConversion<int>();
 
             builder.HasOne(c => c.Address).WithOne(c => c.Colporteur);
+            builder.HasMany(x => x.Goals).WithOne().HasForeignKey("ColporteurId");
 
             builder.ToTable("Colporteur");
         }
