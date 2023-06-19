@@ -4,15 +4,25 @@ import { NewLeader } from "./Components/NewLeader";
 import { NewLeaderInfos } from "./Components/NewLeaderInfos";
 import { NewTeam } from "./Components/NewTeam";
 import { Welcome } from "./Components/Welcome";
+import { useNavigate } from "react-router-dom";
+import { clearAuthToken, clearUserToken } from "../../auth/useAuth";
 
 
 export function WizardPage() {
     const [indexPageWizard, setIndexPageWizard] = useState(0);
+    const navigate = useNavigate();
     
-    function handlePageWizard (userHasBack: boolean) {
-        var valueOfIndex = userHasBack ? indexPageWizard - 1 : indexPageWizard + 1;
-
+    function handlePageWizard (userHasBack: boolean, userHasClose?: boolean) {
         debugger;
+        
+        if (userHasClose) {
+            clearAuthToken();
+            clearUserToken();
+
+            navigate('/');
+        }
+        
+        var valueOfIndex = userHasBack ? indexPageWizard - 1 : indexPageWizard + 1;
 
         setIndexPageWizard(valueOfIndex);
     }

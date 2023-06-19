@@ -6,6 +6,7 @@ using COLP.Management.API.Services.Team;
 using COLP.Management.API.ViewModels.Team;
 using COLP.MessageBus;
 using COLP.Operation.API.Integration;
+using COLP.Person.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,19 +17,27 @@ namespace COLP.Management.API.Controllers
     {
         private readonly IMessageBus _bus;
         private readonly ITeamService _teamService;
+        private readonly IColporteurService _colporteurService;
 
-        public TeamController(IMessageBus bus, ITeamService teamService)
+        public TeamController(IMessageBus bus, ITeamService teamService, IColporteurService colporteurService)
         {
             _bus = bus;
             _teamService = teamService;
+            _colporteurService = colporteurService;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("save-team")]
         public async Task<ActionResult> SaveTeam(TeamViewModel teamDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
-            
+
+            if (!Request.Headers.TryGetValue("X-User-Id", out var userIdValue))
+                return CustomResponse();
+
+            if (!Guid.TryParse(userIdValue, out var userId))
+                return CustomResponse();
+
             var imageId = Guid.Empty;
             ResponseMessage imageResult;
 
@@ -51,6 +60,7 @@ namespace COLP.Management.API.Controllers
             if (hasTeamSaved)
             {
                 var goalResult = await SaveGoal(teamDto.Goal, teamId);
+                var leaderTeamResult = await AddTeamForLeader(teamId, userId);
 
                 if (!goalResult.ValidationResult.IsValid)
                     return CustomResponse();
@@ -89,6 +99,13 @@ namespace COLP.Management.API.Controllers
             {
                 throw;
             }
+        }
+        
+        private async Task<ResponseMessage> AddTeamForLeader(Guid teamId, Guid userId)
+        {
+            var leader = _colporteurService.GetColporteurById(userId);
+
+            return null;
         }
     }
 }
