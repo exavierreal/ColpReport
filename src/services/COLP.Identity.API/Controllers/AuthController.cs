@@ -170,7 +170,7 @@ namespace COLP.Identity.API.Controllers
 
             return new UserResponseLogin
             {
-                AcessToken = encodedToken,
+                AccessToken = encodedToken,
                 ExpiresIn = TimeSpan.FromHours(_appSettings.ExpirationInHours).TotalSeconds,
                 UserToken = userToken
             };

@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "../interfaces/User";
 import { UserLogin } from "../interfaces/UserLogin";
+import { useNavigate } from "react-router-dom";
+import { setAuthToken, setUserToken } from "../../../auth/useAuth";
 
 const BASE_URL = "https://localhost:7169/api/Auth";
 
@@ -16,12 +18,14 @@ const login = (userLogin: UserLogin) => {
 
 export const useRegisterApi = () => {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     const { mutate, isLoading } = useMutation(registerUser, {
         onSuccess: response => {
-            queryClient.setQueryData(['authToken'], response.data?.accessToken);
-            queryClient.setQueryData(['userRoles'], response.data?.userToken?.roles?.name);
-            console.log(response);
+            setAuthToken(response.data?.accessToken);
+            setUserToken(response.data?.userToken);
+
+            navigate('/wizard');
         },
         onError: (response) => {
             console.log(response)
@@ -36,12 +40,19 @@ export const useRegisterApi = () => {
 
 export const useLoginApi = () => {
     const [error, setError] = useState("");
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     const { mutate, isLoading } = useMutation(login, {
-        onSuccess: data => {
-            
+        onSuccess: response => {
+            setAuthToken(response.data?.accessToken);
+            setUserToken(response.data?.userToken);
+
+            navigate('/wizard');
         },
         onError: (response: AxiosError) => {
+            console.log(response);
+
             if (response.response?.data?.errors?.Messages)
                 setError(response.response?.data?.errors?.Messages[0]);
 

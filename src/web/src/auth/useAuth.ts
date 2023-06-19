@@ -1,16 +1,28 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+
 export function getAuthToken(): string | null {
-    const queryClient = useQueryClient();
-    return queryClient.getQueryData<string>(['authToken']) ?? null;
+    return localStorage.getItem('authToken') ?? null;
 }
 
-export function removeAuthToken(): void {
-    const queryClient = useQueryClient();
-    queryClient.removeQueries(['authToken'])
+export function setAuthToken(authToken: string) {
+    localStorage.setItem('authToken', authToken)
 }
 
-export function getUserRoles(): string[] | null {
-    const queryClient = useQueryClient();
-    return queryClient.getQueryData<string[]>(['userRoles']) ?? null;
+export function clearAuthToken(): void {
+    localStorage.removeItem('authToken');
+}
+
+export function getUserToken(): string[] | null {
+    const storedUserTokens = localStorage.getItem('userToken');
+    return storedUserTokens ? JSON.parse(storedUserTokens) : null;
+}
+
+export function setUserToken(token: string[]) {
+    const stringfiedTokens = JSON.stringify(token);
+    localStorage.setItem('userToken', stringfiedTokens);
+}
+
+export function clearUserToken() {
+    localStorage.removeItem('userToken');
 }

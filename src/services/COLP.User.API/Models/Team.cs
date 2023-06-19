@@ -1,6 +1,7 @@
 ﻿using COLP.Core.DomainObjects;
 using COLP.Images.API.Models;
 using COLP.Operation.API.Models;
+using COLP.Person.API.Models;
 
 namespace COLP.Management.API.Models
 {
@@ -12,6 +13,7 @@ namespace COLP.Management.API.Models
         public Guid AssociationId { get; private set; }
         public Association Association { get; private set; }
         public ICollection<Goal> Goals { get; private set; }
+        public ICollection<Colporteur> Colporteurs { get; private set; }
 
         protected Team() { }
 

@@ -5,7 +5,7 @@ interface HeaderBarProps {
     title: string;
     leftIcon?: string;
     rightIcon?: string;
-    handleClick: (userHasBack: boolean) => void;
+    handleClick: (userHasBack: boolean, userHasClose?: boolean) => void;
 }
 
 export function HeaderBar(props: HeaderBarProps) {

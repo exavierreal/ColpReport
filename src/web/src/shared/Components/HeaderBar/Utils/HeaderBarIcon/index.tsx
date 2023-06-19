@@ -4,16 +4,14 @@ import { Link } from "react-router-dom";
 
 interface HeaderBarIconProps {
     icon?: string;
-    handleClick: (userHasBack: boolean) => void;
+    handleClick: (userHasBack: boolean, userHasClose?: boolean) => void;
 }
 
 export function HeaderBarIcon (props: HeaderBarIconProps) {
     switch(props.icon) {
         case 'close':
             return (
-                <Link to="/">
-                    <Icon icon="akar-icons:cross" width="30" className="icon" />
-                </Link>
+                <Icon icon="akar-icons:cross" width="30" className="icon" onClick={() => props.handleClick(false, true)} />
             )
         case 'back':
             return <Icon onClick={() => props.handleClick(true)} icon="akar-icons:arrow-left" width="30" className="icon" />

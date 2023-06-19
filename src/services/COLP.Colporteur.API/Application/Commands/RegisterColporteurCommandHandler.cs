@@ -7,11 +7,11 @@ using MediatR;
 
 namespace COLP.Person.API.Application.Commands
 {
-    public class ColporteurCommandHandler : CommandHandler, IRequestHandler<RegisterColporteurCommand, ValidationResult>
+    public class RegisterColporteurCommandHandler : CommandHandler, IRequestHandler<RegisterColporteurCommand, ValidationResult>
     {
         private readonly IColporteurRepository _colporteurRepository;
 
-        public ColporteurCommandHandler(IColporteurRepository colporteurRepository)
+        public RegisterColporteurCommandHandler(IColporteurRepository colporteurRepository)
         {
             _colporteurRepository = colporteurRepository;
         }

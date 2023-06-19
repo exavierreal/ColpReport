@@ -1,4 +1,4 @@
 export interface WizardProps {
     index: number;
-    handlePageWizard: (userHasBack: boolean) => void;
+    handlePageWizard: (userHasBack: boolean, userHasClose?: boolean) => void;
 }
