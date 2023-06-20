@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace COLP.Management.API.Migrations
 {
     [DbContext(typeof(ManagementContext))]
-    [Migration("20230614191235_InitalMigration")]
-    partial class InitalMigration
+    [Migration("20230619230519_Resolving Bit")]
+    partial class ResolvingBit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,7 @@ namespace COLP.Management.API.Migrations
             modelBuilder.Entity("COLP.Images.API.Models.Image", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Filename")
@@ -34,6 +35,9 @@ namespace COLP.Management.API.Migrations
 
                     b.Property<byte[]>("ImageData")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("IsProfileImageActive")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -103,6 +107,8 @@ namespace COLP.Management.API.Migrations
 
                     b.HasIndex("AssociationId");
 
+                    b.HasIndex("ImageId");
+
                     b.ToTable("Team", (string)null);
                 });
 
@@ -136,6 +142,9 @@ namespace COLP.Management.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ColporteurId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .HasColumnType("varchar(100)");
 
@@ -147,18 +156,86 @@ namespace COLP.Management.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ColporteurId");
+
                     b.HasIndex("TeamId");
 
                     b.ToTable("Goal");
                 });
 
-            modelBuilder.Entity("COLP.Images.API.Models.Image", b =>
+            modelBuilder.Entity("COLP.Person.API.Models.Colporteur", b =>
                 {
-                    b.HasOne("COLP.Management.API.Models.Team", null)
-                        .WithOne("Image")
-                        .HasForeignKey("COLP.Images.API.Models.Image", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CPF")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("RG")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("ShirtSize")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Colporteur");
+                });
+
+            modelBuilder.Entity("COLP.Person.API.Models.ColporteurAddress", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Cep")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid>("ColporteurId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Complement")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("District")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Number")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("UF")
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColporteurId")
+                        .IsUnique();
+
+                    b.ToTable("ColporteurAddress");
                 });
 
             modelBuilder.Entity("COLP.Management.API.Models.Association", b =>
@@ -180,7 +257,14 @@ namespace COLP.Management.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("COLP.Images.API.Models.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Association");
+
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("COLP.Management.API.Models.Union", b =>
@@ -196,9 +280,32 @@ namespace COLP.Management.API.Migrations
 
             modelBuilder.Entity("COLP.Operation.API.Models.Goal", b =>
                 {
+                    b.HasOne("COLP.Person.API.Models.Colporteur", null)
+                        .WithMany("Goals")
+                        .HasForeignKey("ColporteurId");
+
                     b.HasOne("COLP.Management.API.Models.Team", null)
                         .WithMany("Goals")
                         .HasForeignKey("TeamId");
+                });
+
+            modelBuilder.Entity("COLP.Person.API.Models.Colporteur", b =>
+                {
+                    b.HasOne("COLP.Management.API.Models.Team", null)
+                        .WithMany("Colporteurs")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("COLP.Person.API.Models.ColporteurAddress", b =>
+                {
+                    b.HasOne("COLP.Person.API.Models.Colporteur", "Colporteur")
+                        .WithOne("Address")
+                        .HasForeignKey("COLP.Person.API.Models.ColporteurAddress", "ColporteurId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Colporteur");
                 });
 
             modelBuilder.Entity("COLP.Management.API.Models.Association", b =>
@@ -213,14 +320,21 @@ namespace COLP.Management.API.Migrations
 
             modelBuilder.Entity("COLP.Management.API.Models.Team", b =>
                 {
-                    b.Navigation("Goals");
+                    b.Navigation("Colporteurs");
 
-                    b.Navigation("Image");
+                    b.Navigation("Goals");
                 });
 
             modelBuilder.Entity("COLP.Management.API.Models.Union", b =>
                 {
                     b.Navigation("Associations");
+                });
+
+            modelBuilder.Entity("COLP.Person.API.Models.Colporteur", b =>
+                {
+                    b.Navigation("Address");
+
+                    b.Navigation("Goals");
                 });
 #pragma warning restore 612, 618
         }

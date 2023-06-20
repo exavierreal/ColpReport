@@ -1,7 +1,7 @@
-﻿using COLP.Management.API.Data.Repository.Team;
+﻿using COLP.Management.API.Data.Repository;
 using COLP.Management.API.Models;
 
-namespace COLP.Management.API.Services.Team
+namespace COLP.Management.API.Services
 {
     public class TeamService : ITeamService
     {
@@ -10,6 +10,11 @@ namespace COLP.Management.API.Services.Team
         public TeamService(ITeamRepository repository)
         {
             _repository = repository;
+        }
+
+        public async Task<Team> GetTeamById(Guid id)
+        {
+            return await _repository.GetTeamById(id);
         }
 
         public async Task<bool> SaveTeam(Models.Team team)

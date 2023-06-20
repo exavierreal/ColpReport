@@ -11,9 +11,9 @@ namespace COLP.Person.API.Models
         public string CPF { get; private set; }
         public string RG { get; private set; }
         public string ShirtSize { get; private set; }
-        public bool isActive { get; private set; }
+        public bool IsActive { get; private set; }
         public ColporteurAddress Address { get; private set; }
-        public Guid TeamId { get; private set; }
+        public Guid? TeamId { get; private set; }
 
         public ICollection<Goal> Goals { get; private set; }
 
@@ -24,7 +24,26 @@ namespace COLP.Person.API.Models
             Id = id;
             Name = name;
             LastName = lastName;
-            isActive = true;
+            IsActive = true;
+        }
+
+        public Colporteur(Guid id, string name, string lastName, string phoneNumber, string cpf, string rg, string shirtSize, bool isActive, Guid teamId)
+        {
+            Id = id;
+            Name = name;
+            LastName = lastName;
+            PhoneNumber = phoneNumber;
+            CPF = cpf;
+            RG = rg;
+            ShirtSize = shirtSize;
+            IsActive = isActive;
+            TeamId = teamId;
+        }
+
+        public Colporteur(Guid id, ColporteurAddress address)
+        {
+            Id = id;
+            Address = address;
         }
     }
 }

@@ -2,11 +2,14 @@
 using COLP.Core.Messages.Integration;
 using COLP.Images.API.Integration;
 using COLP.Management.API.Models;
-using COLP.Management.API.Services.Team;
+using COLP.Management.API.Services;
 using COLP.Management.API.ViewModels.Team;
 using COLP.MessageBus;
 using COLP.Operation.API.Integration;
+using COLP.Person.API.Application.Queries;
+using COLP.Person.API.Integration;
 using COLP.Person.API.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,13 +20,24 @@ namespace COLP.Management.API.Controllers
     {
         private readonly IMessageBus _bus;
         private readonly ITeamService _teamService;
-        private readonly IColporteurService _colporteurService;
 
-        public TeamController(IMessageBus bus, ITeamService teamService, IColporteurService colporteurService)
+        public TeamController(IMessageBus bus, ITeamService teamService)
         {
             _bus = bus;
             _teamService = teamService;
-            _colporteurService = colporteurService;
+        }
+
+        [HttpGet("get-team-by-userid")]
+        public async Task<ActionResult> GetTeamByUserId(Guid userId)
+        {
+            var result = GetTeamById(userId);
+
+            if (team == null)
+            {
+                return CustomResponse();
+            }
+
+            return CustomResponse(team);
         }
 
         //[Authorize]
@@ -62,7 +76,7 @@ namespace COLP.Management.API.Controllers
                 var goalResult = await SaveGoal(teamDto.Goal, teamId);
                 var leaderTeamResult = await AddTeamForLeader(teamId, userId);
 
-                if (!goalResult.ValidationResult.IsValid)
+                if (!goalResult.ValidationResult.IsValid || !leaderTeamResult.ValidationResult.IsValid)
                     return CustomResponse();
 
                 return CustomResponse(teamDto);
@@ -71,6 +85,9 @@ namespace COLP.Management.API.Controllers
             return CustomResponse();
 
         }
+
+
+        #region Private Methods
 
         private async Task<ResponseMessage> SaveImage(TeamViewModel team, Guid id)
         {
@@ -103,9 +120,29 @@ namespace COLP.Management.API.Controllers
         
         private async Task<ResponseMessage> AddTeamForLeader(Guid teamId, Guid userId)
         {
-            var leader = _colporteurService.GetColporteurById(userId);
+            var requestedColporteur = new RequestedColporteurIntegrationEvent(userId, teamId);
 
-            return null;
+            try
+            {
+                return await _bus.RequestAsync<RequestedColporteurIntegrationEvent, ResponseMessage>(requestedColporteur);
+            } catch
+            {
+                throw;
+            }
         }
+        
+        private async Task<Team> GetTeamById(Guid userId)
+        {
+            var query = new GetTeamIdQuery { UserId = userId };
+            var teamId = _bus.RequestAsync<GetTeamIdQuery, ResponseMessage>(query);
+
+            if (teamId == Guid.Empty)
+            {
+                return CustomResponse();
+            }
+
+            var team = _teamService.GetTeamById((Guid)teamId);
+        }
+        #endregion
     }
 }

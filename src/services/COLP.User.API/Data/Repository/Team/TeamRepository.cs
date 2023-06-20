@@ -1,7 +1,8 @@
 ﻿using COLP.Core.Data;
 using COLP.Management.API.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace COLP.Management.API.Data.Repository.Team
+namespace COLP.Management.API.Data.Repository
 {
     public class TeamRepository : ITeamRepository
     {
@@ -14,9 +15,13 @@ namespace COLP.Management.API.Data.Repository.Team
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public void Insert(Models.Team team)
+        public void Insert(Team team)
         {
             _context.Add(team);
+        }
+        public async Task<Team> GetTeamById(Guid id)
+        {
+            return await _context.Teams.FindAsync(id);
         }
 
         public void Dispose()

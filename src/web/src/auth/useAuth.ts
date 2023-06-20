@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { UserToken } from "../interfaces/UserToken";
 
 
 export function getAuthToken(): string | null {
@@ -13,7 +14,7 @@ export function clearAuthToken(): void {
     localStorage.removeItem('authToken');
 }
 
-export function getUserToken(): string[] | null {
+export function getUserToken(): UserToken | null {
     const storedUserTokens = localStorage.getItem('userToken');
     return storedUserTokens ? JSON.parse(storedUserTokens) : null;
 }

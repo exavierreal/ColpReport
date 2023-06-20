@@ -11,9 +11,6 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\WeatherForecastController.cs" />
-    <Compile Remove="Migrations\20221120194204_Colporteur.cs" />
-    <Compile Remove="Migrations\20221120194204_Colporteur.Designer.cs" />
-    <Compile Remove="Migrations\ColporteurContextModelSnapshot.cs" />
     <Compile Remove="WeatherForecast.cs" />
   </ItemGroup>
 
@@ -29,11 +26,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.15" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Application\Queries\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -12,10 +12,11 @@ namespace COLP.Person.API.Configuration
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            services.AddScoped<IColporteurService, ColporteurService>();
             services.AddScoped<IMediatorHandler, MediatorHandler>();
             services.AddScoped<IRequestHandler<RegisterColporteurCommand, ValidationResult>, RegisterColporteurCommandHandler>();
+            services.AddScoped<IRequestHandler<UpdateColporteurCommand, ValidationResult>, UpdateColporteurCommandHandler>();
 
+            services.AddScoped<IColporteurService, ColporteurService>();
             services.AddScoped<IColporteurRepository, ColporteurRepository>();
             services.AddScoped<ColporteurContext>();
         }
