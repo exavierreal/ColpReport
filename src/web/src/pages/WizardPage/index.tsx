@@ -13,8 +13,6 @@ export function WizardPage() {
     const navigate = useNavigate();
     
     function handlePageWizard (userHasBack: boolean, userHasClose?: boolean) {
-        debugger;
-        
         if (userHasClose) {
             clearAuthToken();
             clearUserToken();

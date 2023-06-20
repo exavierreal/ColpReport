@@ -1,5 +1,4 @@
 ﻿using COLP.Core.Data;
-using COLP.Person.API.Data;
 using COLP.Person.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +33,10 @@ namespace COLP.Person.API.Data.Repository
         public void Update(Colporteur colporteur)
         {
             _context.Update(colporteur);
+        }
+        public async Task<Guid?> GetTeamIdByUserId(Guid? userId)
+        {
+            return await _context.Colporteurs.Where(c => c.Id == userId).Select(x => x.TeamId).FirstOrDefaultAsync();
         }
 
         public void Dispose()

@@ -1,6 +1,4 @@
-﻿using COLP.Images.API.Models;
-using COLP.Management.API.Models;
-using COLP.Operation.API.Models;
+﻿using COLP.Management.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace COLP.Management.API.Data.Mappings

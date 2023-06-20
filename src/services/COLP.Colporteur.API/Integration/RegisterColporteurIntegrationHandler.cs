@@ -4,7 +4,7 @@ using COLP.MessageBus;
 using COLP.Person.API.Application.Commands;
 using FluentValidation.Results;
 
-namespace COLP.Person.API.Services
+namespace COLP.Person.API.Integration
 {
     public class RegisterColporteurIntegrationHandler : BackgroundService
     {

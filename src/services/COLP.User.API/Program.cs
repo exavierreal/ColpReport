@@ -1,5 +1,6 @@
 using COLP.Management.API.Configuration;
 using COLP.Management.API.Data;
+using COLP.Person.API.Data;
 using COLP.WebAPI.Core.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;

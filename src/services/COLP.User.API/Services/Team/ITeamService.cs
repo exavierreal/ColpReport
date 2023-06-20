@@ -1,9 +1,11 @@
 ﻿using COLP.Management.API.Models;
 
-namespace COLP.Management.API.Services.Team
+namespace COLP.Management.API.Services
 {
     public interface ITeamService
     {
-        Task<bool> SaveTeam(Models.Team team);
+        Task<bool> SaveTeam(Team team);
+
+        Task<Team> GetTeamById(Guid id);
     }
 }

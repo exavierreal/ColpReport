@@ -170,6 +170,9 @@ namespace COLP.Management.API.Migrations
                     b.Property<string>("CPF")
                         .HasColumnType("varchar(100)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .HasColumnType("varchar(100)");
 
@@ -185,11 +188,8 @@ namespace COLP.Management.API.Migrations
                     b.Property<string>("ShirtSize")
                         .HasColumnType("varchar(100)");
 
-                    b.Property<Guid>("TeamId")
+                    b.Property<Guid?>("TeamId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -292,8 +292,7 @@ namespace COLP.Management.API.Migrations
                     b.HasOne("COLP.Management.API.Models.Team", null)
                         .WithMany("Colporteurs")
                         .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("COLP.Person.API.Models.ColporteurAddress", b =>

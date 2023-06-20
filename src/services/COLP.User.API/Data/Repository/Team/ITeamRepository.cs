@@ -1,11 +1,12 @@
 ﻿using COLP.Core.Data;
 using COLP.Management.API.Models;
 
-namespace COLP.Management.API.Data.Repository.Team
+namespace COLP.Management.API.Data.Repository
 {
-    public interface ITeamRepository : IRepository<Models.Team>
+    public interface ITeamRepository : IRepository<Team>
     {
-        void Insert(Models.Team team);
+        void Insert(Team team);
+        Task<Team> GetTeamById(Guid id);
     }
 }
 
