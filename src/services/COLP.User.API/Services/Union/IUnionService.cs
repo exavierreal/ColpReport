@@ -1,9 +1,10 @@
 ﻿using COLP.Management.API.Models;
 
-namespace COLP.Management.API.Services.Union
+namespace COLP.Management.API.Services
 {
     public interface IUnionService
     {
-        Task<IEnumerable<Models.Union>> GetUnionsByFilter(string filter);
+        Task<IEnumerable<Union>> GetUnionsByFilter(string filter);
+        Task<Union> GetUnionById(Guid id);
     }
 }

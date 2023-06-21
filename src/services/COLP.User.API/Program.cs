@@ -1,7 +1,9 @@
 using COLP.Management.API.Configuration;
 using COLP.Management.API.Data;
+using COLP.Operation.API.Data;
 using COLP.Person.API.Data;
 using COLP.WebAPI.Core.Identity;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -21,6 +23,8 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddDbContext<ManagementContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ColporteurContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<OperationContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -35,6 +39,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 authConfig.AddJwtConfiguration(builder);
+builder.Services.AddMediatR(typeof(Program));
 DependencyInjectionConfig.RegisterServices(builder.Services);
 builder.Services.AddMessageBusConfiguration(builder.Configuration);
 

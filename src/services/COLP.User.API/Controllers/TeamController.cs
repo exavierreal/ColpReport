@@ -6,7 +6,7 @@ using COLP.Management.API.Services;
 using COLP.Management.API.ViewModels.Team;
 using COLP.MessageBus;
 using COLP.Operation.API.Integration;
-using COLP.Person.API.Application.Queries;
+using COLP.Operation.API.Services;
 using COLP.Person.API.Integration;
 using COLP.Person.API.Services;
 using MediatR;
@@ -20,24 +20,28 @@ namespace COLP.Management.API.Controllers
     {
         private readonly IMessageBus _bus;
         private readonly ITeamService _teamService;
+        private readonly IColporteurService _colporteurService;
+        private readonly IGoalService _goalService;
 
-        public TeamController(IMessageBus bus, ITeamService teamService)
+        public TeamController(IMessageBus bus, ITeamService teamService, IColporteurService colporteurService, IGoalService goalService)
         {
             _bus = bus;
             _teamService = teamService;
+            _colporteurService = colporteurService;
+            _goalService = goalService;
         }
 
         [HttpGet("get-team-by-userid")]
         public async Task<ActionResult> GetTeamByUserId(Guid userId)
         {
-            var result = GetTeamById(userId);
+            var result = await GetTeamById(userId);
 
-            if (team == null)
+            if (result == null)
             {
                 return CustomResponse();
             }
 
-            return CustomResponse(team);
+            return CustomResponse(result);
         }
 
         //[Authorize]
@@ -131,18 +135,25 @@ namespace COLP.Management.API.Controllers
             }
         }
         
-        private async Task<Team> GetTeamById(Guid userId)
+        private async Task<TeamViewModel> GetTeamById(Guid userId)
         {
-            var query = new GetTeamIdQuery { UserId = userId };
-            var teamId = _bus.RequestAsync<GetTeamIdQuery, ResponseMessage>(query);
+            var colporteur = await _colporteurService.GetColporteurById(userId);
 
-            if (teamId == Guid.Empty)
+            if (colporteur == null || colporteur.TeamId == null) return null;
+
+            var team = await _teamService.GetTeamById((Guid)colporteur.TeamId);
+            var goal = await _goalService.GetGoalByTeamId(team.Id);
+            var imageData = team.ImageId != null ? Convert.ToBase64String(team.Image.ImageData) : null;
+
+            return new TeamViewModel
             {
-                return CustomResponse();
-            }
-
-            var team = _teamService.GetTeamById((Guid)teamId);
+                Name = team.Name,
+                AssociationId = team.AssociationId,
+                ImageData = imageData,
+                Goal = goal.Value
+            };
         }
+
         #endregion
     }
 }

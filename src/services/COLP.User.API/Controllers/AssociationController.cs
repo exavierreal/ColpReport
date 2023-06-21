@@ -1,5 +1,5 @@
 ﻿using COLP.Core.Controllers;
-using COLP.Management.API.Services.Association;
+using COLP.Management.API.Services;
 using COLP.Management.API.ViewModels.Association;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +30,25 @@ namespace COLP.Management.API.Controllers
             });
 
             return Ok(associationViewModels);
+        }
+
+        [HttpGet("get-association-by-id")]
+        public async Task<ActionResult> GetAssociationById(Guid associationId)
+        {
+            var association = await _service.GetAssociationsById(associationId);
+
+            if (association == null)
+                return NotFound();
+
+            var associationVM = new AssociationViewModel
+            {
+                Id = association.Id,
+                Name = association.Name,
+                Acronym = association.Acronym,
+                UnionId = association.UnionId
+            };
+
+            return Ok(associationVM);
         }
     }
 }

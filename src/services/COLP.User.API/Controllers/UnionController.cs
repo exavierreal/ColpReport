@@ -1,5 +1,6 @@
 ﻿using COLP.Core.Controllers;
-using COLP.Management.API.Services.Union;
+using COLP.Management.API.Services;
+using COLP.Management.API.ViewModels.Association;
 using COLP.Management.API.ViewModels.Union;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,24 @@ namespace COLP.Management.API.Controllers
             });
 
             return Ok(unionViewModels);
+        }
+
+        [HttpGet("get-union-by-id")]
+        public async Task<ActionResult> GetUnionById(Guid unionId)
+        {
+            var union = await _service.GetUnionById(unionId);
+
+            if (union == null)
+                return NotFound();
+
+            var unionVM = new UnionSuggestionsViewModel
+            {
+                Id = union.Id,
+                Name = union.Name,
+                Acronym = union.Acronym
+            };
+
+            return Ok(unionVM);
         }
     }
 }

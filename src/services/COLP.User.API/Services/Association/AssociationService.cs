@@ -1,7 +1,7 @@
-﻿using COLP.Management.API.Data.Repository.Association;
+﻿using COLP.Management.API.Data.Repository;
 using COLP.Management.API.Models;
 
-namespace COLP.Management.API.Services.Association
+namespace COLP.Management.API.Services
 {
     public class AssociationService : IAssociationService
     {
@@ -12,9 +12,14 @@ namespace COLP.Management.API.Services.Association
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Models.Association>> GetAssociationsByFilter(string filter, Guid unionId)
+        public async Task<IEnumerable<Association>> GetAssociationsByFilter(string filter, Guid unionId)
         {
             return await _repository.GetAssociationsByFilter(filter, unionId);
+        }
+
+        public async Task<Association> GetAssociationsById(Guid associationId)
+        {
+            return await _repository.GetAssociationById(associationId);
         }
     }
 }

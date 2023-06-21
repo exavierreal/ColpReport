@@ -1,10 +1,11 @@
 ﻿using COLP.Core.Data;
 using COLP.Management.API.Models;
 
-namespace COLP.Management.API.Data.Repository.Association
+namespace COLP.Management.API.Data.Repository
 {
-    public interface IAssociationRepository : IRepository<Models.Association>
+    public interface IAssociationRepository : IRepository<Association>
     {
-        Task<IEnumerable<Models.Association>> GetAssociationsByFilter(string filter, Guid unionId);
+        Task<IEnumerable<Association>> GetAssociationsByFilter(string filter, Guid unionId);
+        Task<Association> GetAssociationById(Guid associationId);
     }
 }
