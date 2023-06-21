@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { UnionSuggestions } from "../Interfaces/UnionSuggestions";
+import { UnionSuggestion } from "../Interfaces/UnionSuggestions";
 import { AssociationSuggestion } from "../Interfaces/AssociationSuggestion";
 import { useMutation } from "@tanstack/react-query";
 import { Team } from "../Interfaces/Team";
@@ -18,14 +18,22 @@ const saveTeam = (team: Team, userId: string | null) => {
 }
 
 export async function getUnionSuggestions(filter: string) {
-    return await axios.get<UnionSuggestions[]>(UNION_URL + 'get-union-suggestions', { params: {filter} }).then(response => response.data);
+    return await axios.get<UnionSuggestion[]>(UNION_URL + 'get-union-suggestions', { params: {filter} }).then(response => response.data);
+}
+
+export async function getUnionById<UnionSuggestion>(unionId: string) {
+    return await axios.get<UnionSuggestion>(UNION_URL + 'get-union-by-id', { params: {unionId} }).then(response => response.data);
 }
 
 export async function getAssociationSuggestion(filter: string, unionId: string) {
     return await axios.get<AssociationSuggestion[]>(ASSOCIATION_URL + 'get-association-suggestions', { params: {filter, unionId} }).then(response => response.data);
 }
 
-export async function getSaveTeam(userId: string) {
+export async function getAssociationById<Association>(associationId: string) {
+    return await axios.get<Association>(ASSOCIATION_URL + 'get-association-by-id', { params: {associationId} }).then(response => response.data);
+}
+
+export async function getSaveTeam(userId: string | null) {
     return await axios.get<Team>(TEAM_URL + 'get-team-by-userid', { params: {userId} }).then(response => response.data);
 }
 
@@ -49,6 +57,7 @@ export function useSaveTeamApi () {
         saveTeam: mutate,
         isLoading,
         error,
-        isTeamSaved
+        isTeamSaved,
+        setIsTeamSaved
     }
 }

@@ -34,10 +34,6 @@ namespace COLP.Person.API.Data.Repository
         {
             _context.Update(colporteur);
         }
-        public async Task<Guid?> GetTeamIdByUserId(Guid? userId)
-        {
-            return await _context.Colporteurs.Where(c => c.Id == userId).Select(x => x.TeamId).FirstOrDefaultAsync();
-        }
 
         public void Dispose()
         {

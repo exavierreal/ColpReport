@@ -1,5 +1,6 @@
 ﻿using COLP.Core.Data;
 using COLP.Operation.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace COLP.Operation.API.Data.Repositories
 {
@@ -17,6 +18,10 @@ namespace COLP.Operation.API.Data.Repositories
         public void Add(Goal goal)
         {
             _context.Add(goal);
+        }
+        public async Task<Goal> GetGoalByTeamId(Guid teamId)
+        {
+            return await _context.Goal.FirstOrDefaultAsync(x => x.TeamId == teamId);
         }
 
         public void Dispose()

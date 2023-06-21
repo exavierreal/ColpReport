@@ -9,6 +9,5 @@ namespace COLP.Person.API.Data.Repository
         Task<Colporteur> GetById(Guid id);
         void Insert(Colporteur colporteur);
         void Update(Colporteur colporteur);
-        Task<Guid?> GetTeamIdByUserId(Guid? userId);
     }
 }

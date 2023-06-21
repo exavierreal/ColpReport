@@ -57,7 +57,7 @@ namespace COLP.Person.API.Integration
                 
                     return new ResponseMessage(success);
                 }
-                catch (Exception e)
+                catch
                 {
                     throw;
                 }

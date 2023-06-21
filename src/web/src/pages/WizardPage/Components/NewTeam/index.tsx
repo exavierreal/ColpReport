@@ -11,13 +11,16 @@ import { GoalModal } from "../GoalModal";
 import { useNavigate } from "react-router-dom";
 import { CancelModal } from "../../../../shared/Components/Modals/CancelModal";
 import { Team } from "../../Interfaces/Team";
-import { UnionSuggestions } from "../../Interfaces/UnionSuggestions";
-import { useSaveTeamApi } from "../../Api/useTeamApi";
+import { UnionSuggestion } from "../../Interfaces/UnionSuggestions";
+import { getAssociationById, getSaveTeam, getUnionById, useSaveTeamApi } from "../../Api/useTeamApi";
+import { getUserToken } from "../../../../auth/useAuth";
+import { Association } from "../../Interfaces/Association";
 
 
 export function NewTeam(props: WizardProps) {
     const navigate = useNavigate();
 
+    const [showNextIcon, setShowNextIcon] = useState(false);
     const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     const [emptyInputs, setEmptyInputs] = useState<string[]>([]);
@@ -29,11 +32,15 @@ export function NewTeam(props: WizardProps) {
     
     const { previewImage, inputRef, handleImageUpload, handleButtonClick } = useImage();
     const {  handleInputFocus, handleInputBlur, handleInputChange, handleKeyOnInput, handleMouseEnter, handleOptionClick,
-        isUnionInputFocused, isAssociationInputFocused, keyboardFocusIndex, unionOptions, associationOptions,
-        selectedUnion, selectedAssociation, selectedUnionIndex, selectedAssociationIndex, displayUnionSelected, displayedAssociationSelected
+             setDisplayUnionSelected, setDisplayAssociationSelected,
+             isUnionInputFocused, isAssociationInputFocused, keyboardFocusIndex, unionOptions, associationOptions,
+             selectedUnion, selectedAssociation, selectedUnionIndex, selectedAssociationIndex, displayUnionSelected, displayAssociationSelected
     } = useDataList();
 
-    const { saveTeam, isLoading, error, isTeamSaved } = useSaveTeamApi();
+    const { saveTeam, isLoading, error, isTeamSaved, setIsTeamSaved } = useSaveTeamApi();
+
+    const userToken = getUserToken();
+    const userId = userToken ? userToken.id : null;
 
     useEffect(() => {
         setTeam((prevTeam) => {
@@ -65,11 +72,35 @@ export function NewTeam(props: WizardProps) {
             return updateTeam;
         })
     }, [selectedUnion, selectedAssociation, previewImage]);
+
+    useEffect(() => {
+         getSaveTeam(userId)
+            .then(async (data) => {
+                if (data) {
+                    setTeam(data);
+                    const association = await getAssociationById<Association>(data.associationId!);
+                    const union = await getUnionById<UnionSuggestion>(association.unionId!);
+
+                    if (teamNameInputRef.current)
+                        teamNameInputRef.current.value = data.name;
+                    
+                    setDisplayUnionSelected(`${union.acronym} - ${union.name}`)
+                    setDisplayAssociationSelected(`${association.acronym} - ${association.name}`)
+                    setShowNextIcon(true);
+                    setIsTeamSaved(true);
+                }
+            })
+    }, [userId])
     
+    useEffect(() => {
+        setShowNextIcon(isTeamSaved)
+    }, [isTeamSaved]);
+
     function handleTeamInputChange(e: ChangeEvent<HTMLInputElement>) {
         const teamName = e.target.value;
 
         removeErrorStyle("team-name");
+        setIsTeamSaved(false);
         
         if (teamName.trim().length < 2) {
             if (!emptyInputs.includes("team-name"))
@@ -78,10 +109,12 @@ export function NewTeam(props: WizardProps) {
         else
             setEmptyInputs((prevEmptyInputs) => prevEmptyInputs.filter((input) => input !== "team-name"));
 
-        setTeam({ ...team, name: teamName });
+        setTeam((prevTeam) => ({ ...prevTeam, name: teamName }));
     }
 
-    function handleDatalist(isUnion: boolean, event: ChangeEvent<HTMLInputElement> | KeyboardEvent<HTMLInputElement> | MouseEvent<HTMLLIElement>, action: string, option?: UnionSuggestions, index?: number) {
+    function handleDatalist(isUnion: boolean, event: ChangeEvent<HTMLInputElement> | KeyboardEvent<HTMLInputElement> | MouseEvent<HTMLLIElement>, action: string, option?: UnionSuggestion, index?: number) {
+        setIsTeamSaved(false);
+
         switch(action) {
             case "change":
                 isUnion ? removeErrorStyle("union") : removeErrorStyle("association");
@@ -93,7 +126,7 @@ export function NewTeam(props: WizardProps) {
                 break;
             case "click":
                 isUnion ? removeErrorStyle("union") : removeErrorStyle("association");
-                handleOptionClick(isUnion, option as UnionSuggestions, index as number, event as MouseEvent<HTMLLIElement>)
+                handleOptionClick(isUnion, option as UnionSuggestion, index as number, event as MouseEvent<HTMLLIElement>)
                 break;
         }
     }
@@ -160,7 +193,7 @@ export function NewTeam(props: WizardProps) {
 
     return (
         <Container>
-            <HeaderBar handleClick={props.handlePageWizard} title="Nova Equipe" leftIcon="back" rightIcon={isTeamSaved ? "next" : ""} />
+            <HeaderBar handleClick={props.handlePageWizard} title="Nova Equipe" leftIcon="back" rightIcon={showNextIcon ? "next" : ""} />
 
             <Content onSubmit={handleSubmit}>
                 <TeamFormBox>
@@ -225,7 +258,7 @@ export function NewTeam(props: WizardProps) {
                                 <input
                                     ref={associationInputRef}
                                     type="text"
-                                    value={displayedAssociationSelected}
+                                    value={displayAssociationSelected}
                                     onKeyDown={(event) => handleDatalist(false, event, "keydown")}
                                     onChange={(event) => handleDatalist(false, event, "change")}
                                 />

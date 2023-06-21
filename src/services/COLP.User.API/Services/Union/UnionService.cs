@@ -1,7 +1,7 @@
-﻿using COLP.Management.API.Data.Repository.Union;
+﻿using COLP.Management.API.Data.Repository;
 using COLP.Management.API.Models;
 
-namespace COLP.Management.API.Services.Union
+namespace COLP.Management.API.Services
 {
     public class UnionService : IUnionService
     {
@@ -12,9 +12,14 @@ namespace COLP.Management.API.Services.Union
             _repository = repository;
         }
 
-        public Task<IEnumerable<Models.Union>> GetUnionsByFilter(string filter)
+        public async Task<Union> GetUnionById(Guid id)
         {
-            return _repository.GetUnionsByFilter(filter);
+            return await _repository.GetUnionById(id);
+        }
+
+        public async Task<IEnumerable<Union>> GetUnionsByFilter(string filter)
+        {
+            return await _repository.GetUnionsByFilter(filter);
         }
     }
 }

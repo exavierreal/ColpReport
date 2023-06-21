@@ -1,10 +1,11 @@
 ﻿using COLP.Core.Data;
 using COLP.Management.API.Models;
 
-namespace COLP.Management.API.Data.Repository.Union
+namespace COLP.Management.API.Data.Repository
 {
-    public interface IUnionRepository : IRepository<Models.Union>
+    public interface IUnionRepository : IRepository<Union>
     {
-        Task<IEnumerable<Models.Union>> GetUnionsByFilter(string filter);
+        Task<IEnumerable<Union>> GetUnionsByFilter(string filter);
+        Task<Union> GetUnionById(Guid id);
     }
 }
