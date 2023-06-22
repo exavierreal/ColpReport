@@ -2,19 +2,20 @@ import styled from "styled-components";
 
 export const Overlay = styled.div`
     position: fixed;
-    top: 0;
     left: 0;
+    top: 0;
     width: 100vw;
     height: 100vh;
     background: var(--overlay);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 
 export const Modal = styled.div`
     background: #FFFFFF;
+    box-shadow: 0 0 20px 5px rgba(36, 50, 84, .54);
     border-radius: 10px;
     padding: 48px;
     position: relative;
@@ -31,7 +32,6 @@ export const Modal = styled.div`
 `;
 
 export const Container = styled.div`
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -56,41 +56,24 @@ export const Subheading = styled.p`
     width: 170px;
 `;
 
-export const GoalField = styled.div`
+export const DateField = styled.div`
     margin-top: 24px;
     display: flex;
     align-items: center;
-    position: relative;
-`;
-
-export const Label = styled.span`
-    position: absolute;
-    left: 12px;
-    font: 400 16px 'Roboto';
-    color: var(--dark-v1);
-`;
-
-export const GoalInput = styled.input`
-    border: 1px solid var(--dark-v2);
-    padding: 13px 10px 13px;
     text-align: center;
-    color: var(--dark-v1);
-    box-shadow: 0 0 20px 3px rgba(137, 144, 163, .2);
+`;
+
+export const DateInput = styled.input`
+    width: 164px;
+    border: 1px solid var(--dark-v2);
+    padding: 10px;
     border-radius: 5px;
-    transition: 0.3 ease;
+    box-shadow: 0 0 20px 3px rgba(137, 144, 163, .2);
+    font: 400 16px 'Roboto';
 
     &:focus {
         border: 2px solid var(--primary-v2);
     }
-`;
-
-export const ArrowsButton = styled.div`
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    right: 10px;
-    cursor: pointer;
-    color: var(--dark-v2);
 `;
 
 export const SaveButton = styled.button`

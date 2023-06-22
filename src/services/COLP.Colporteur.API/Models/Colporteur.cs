@@ -16,6 +16,7 @@ namespace COLP.Person.API.Models
         public Guid? TeamId { get; private set; }
 
         public ICollection<Goal> Goals { get; private set; }
+        public ICollection<Category> Categories { get; private set; }
 
         protected Colporteur() { }
 
