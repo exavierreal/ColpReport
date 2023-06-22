@@ -297,7 +297,7 @@ export function NewTeam(props: WizardProps) {
                 <ActionButtons onCancel={handleCancel} saveDisabled={isTeamSaved} />
             </Content>
 
-            { isGoalModalOpen && <GoalModal onCloseModal={handleToggleGoalModal} onSaveGoal={handleSaveGoal} initialValue={team.goal} /> }
+            { isGoalModalOpen && <GoalModal onCloseModal={handleToggleGoalModal} onSaveGoal={handleSaveGoal} initialValue={team.goal} type="team" /> }
             { isCancelModalOpen && <CancelModal onCancelConfirm={handleCancel} /> }
         </Container>
     );

@@ -25,6 +25,10 @@ export const Picture = styled.div`
     justify-content: center;
     flex-direction: column;
     margin-top: 20px;
+
+    input {
+        display: none;
+    }
 `;
 
 export const MainImage = styled.div`
@@ -41,6 +45,13 @@ export const MainImage = styled.div`
 
     .user-icon {
         color: var(--gray-v1);
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 1px solid var(--gray-v2);
     }
 `;
 

@@ -3,10 +3,19 @@ import { ArrowsButton, Container, GoalField, GoalInput, HeadImage, Heading, Labe
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { GoalModalProps } from "../../Interfaces/GoalModalProps";
 
-export function GoalModal({ onCloseModal, onSaveGoal, initialValue }: GoalModalProps) {
+export function GoalModal({ onCloseModal, onSaveGoal, initialValue, type }: GoalModalProps) {
     const [inputValue, setInputValue] = useState(formatValue(initialValue.toString()));
     const inputRef = useRef<HTMLInputElement>(null);
     const prevCursorPosition = useRef<number | null>(null);
+
+    const getTitle = () => {
+        switch(type) {
+            case 'team':
+                return 'Defina a meta inicial da equipe:';
+            case 'leader':
+                return 'Defina a sua meta inicial:'
+        }
+    }
 
     useEffect(() => {
         if (inputRef.current && prevCursorPosition.current !== null) {
@@ -73,7 +82,7 @@ export function GoalModal({ onCloseModal, onSaveGoal, initialValue }: GoalModalP
                     <HeadImage src="/assets/akar-icons_statistic-up.svg" />
                     <Heading>
                         <Title>Meta!!!</Title>
-                        <Subheading>Defina a meta inicial da equipe:</Subheading>
+                        <Subheading>{ getTitle() }</Subheading>
                     </Heading>
 
                     <GoalField>
