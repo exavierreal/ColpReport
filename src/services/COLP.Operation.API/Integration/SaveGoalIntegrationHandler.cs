@@ -36,7 +36,7 @@ namespace COLP.Operation.API.Integration
 
         private async Task<ResponseMessage> SaveGoal(RequestedGoalIntegrationEvent message)
         {
-            var goalCommand = new SaveGoalCommand(message.GoalValue, message.Name, message.TeamId, message.GoalId);
+            var goalCommand = new SaveGoalCommand(message.GoalValue, message.Name, message.TeamId, message.ColporteurId, message.GoalId);
             ValidationResult hasSuccessOnSaveTheGoal;
 
             using (var scope = _serviceProvider.CreateScope())

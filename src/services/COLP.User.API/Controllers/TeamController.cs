@@ -110,7 +110,7 @@ namespace COLP.Management.API.Controllers
         private async Task<ResponseMessage> SaveGoal(decimal value, Guid teamId)
         {
             var goalName = "Meta Inicial";
-            var requestedGoal = new RequestedGoalIntegrationEvent(value, goalName, teamId, null);
+            var requestedGoal = new RequestedGoalIntegrationEvent(value, goalName, teamId, null, null);
 
             try
             {

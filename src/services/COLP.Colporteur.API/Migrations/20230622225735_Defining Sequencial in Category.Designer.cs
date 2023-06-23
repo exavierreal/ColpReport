@@ -4,6 +4,7 @@ using COLP.Person.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace COLP.Person.API.Migrations
 {
     [DbContext(typeof(ColporteurContext))]
-    partial class ColporteurContextModelSnapshot : ModelSnapshot
+    [Migration("20230622225735_Defining Sequencial in Category")]
+    partial class DefiningSequencialinCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,9 +119,6 @@ namespace COLP.Person.API.Migrations
 
                     b.Property<string>("ShirtSize")
                         .HasColumnType("varchar(5)");
-
-                    b.Property<DateTime>("SinceDate")
-                        .HasColumnType("datetime");
 
                     b.Property<Guid?>("TeamId")
                         .HasColumnType("uniqueidentifier");
