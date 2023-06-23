@@ -1,6 +1,9 @@
 import styled from "styled-components";
+import { CategoryBoxProps } from "../../Interfaces/CategoryBoxProps";
 
 export const Container = styled.div``;
+
+export const Content = styled.form``;
 
 export const CardBox = styled.div`
     margin: 28px 40px 0;
@@ -111,14 +114,14 @@ export const CategoriesBoxes = styled.div`
     margin-top: 14px;
 `;
 
-export const CategoryBox = styled.input`
+export const CategoryBox = styled.button<CategoryBoxProps>`
     background: #FFFFFF;
     width: 160px;
     height: 40px;
-    border: 1px solid var(--gray-v2);
+    border: ${(props) => (props.selected ? '1px solid var(--primary-v3)' : '1px solid var(--gray-v2)')};
     border-radius: 5px;
     font: 400 14px 'Roboto';
-    color: var(--dark-v2);
+    color: ${(props) => (props.selected ? 'var(--primary-v3)' : 'var(--dark-v2)')};
     box-shadow: 0 0 20px 3px rgba(137, 144, 163, .2);
     cursor: pointer;
 `;

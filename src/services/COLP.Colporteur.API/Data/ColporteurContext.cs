@@ -47,9 +47,9 @@ namespace COLP.Person.API.Data
 
                 return success;
                 }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                throw;
             }
         }
     }

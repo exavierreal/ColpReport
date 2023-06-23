@@ -18,6 +18,9 @@ namespace COLP.Person.API.Configuration
 
             services.AddScoped<IColporteurService, ColporteurService>();
             services.AddScoped<IColporteurRepository, ColporteurRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
+
             services.AddScoped<ColporteurContext>();
         }
     }

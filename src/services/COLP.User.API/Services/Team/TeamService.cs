@@ -17,7 +17,7 @@ namespace COLP.Management.API.Services
             return await _repository.GetTeamById(id);
         }
 
-        public async Task<bool> SaveTeam(Models.Team team)
+        public async Task<bool> SaveTeam(Team team)
         {
             _repository.Insert(team);
 

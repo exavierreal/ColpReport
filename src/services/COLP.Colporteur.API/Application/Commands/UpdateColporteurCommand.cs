@@ -13,6 +13,7 @@ namespace COLP.Person.API.Application.Commands
         public string RG { get; private set; }
         public string ShirtSize { get; private set; }
         public bool IsActive { get; private set; }
+        public DateTime SinceDate { get; private set; }
         public Guid TeamId { get; private set; }
 
         public UpdateColporteurCommand(Guid id, string name, string lastName, string phoneNumber, string cpf, string rg, string shirtSize, bool isActive, Guid teamId)
