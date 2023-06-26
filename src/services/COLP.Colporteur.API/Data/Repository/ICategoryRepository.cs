@@ -6,6 +6,6 @@ namespace COLP.Person.API.Data.Repository
     public interface ICategoryRepository : IRepository<Category>
     {
         Task<IEnumerable<Category>> GetAll();
-        void InsertCategoriesToColporteur(Guid colporteurId, IEnumerable<Guid> categoryIds);
+        Task InsertCategoriesToColporteur(Guid userId, IEnumerable<Guid> categoryIds);
     }
 }

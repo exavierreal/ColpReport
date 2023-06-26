@@ -81,7 +81,15 @@ namespace COLP.Management.API.Controllers
                 var leaderTeamResult = await AddTeamForLeader(teamId, userId);
 
                 if (!goalResult.ValidationResult.IsValid || !leaderTeamResult.ValidationResult.IsValid)
+                {
+                    if (!leaderTeamResult.ValidationResult.IsValid)
+                    {
+                        // TODO: Delete the GoalResult that was saved.
+                    }
+
                     return CustomResponse();
+                }
+                    
 
                 return CustomResponse(teamDto);
             }

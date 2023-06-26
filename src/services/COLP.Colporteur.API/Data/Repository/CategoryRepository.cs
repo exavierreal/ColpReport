@@ -20,16 +20,28 @@ namespace COLP.Person.API.Data.Repository
             return await _context.Categories.OrderBy(c => c.Sequential).ToListAsync();
         }
 
-        public async void InsertCategoriesToColporteur(Guid colporteurId, IEnumerable<Guid> categoryIds)
+        public async Task InsertCategoriesToColporteur(Guid userId, IEnumerable<Guid> categoryIds)
         {
-            var colporteur = await _context.Colporteurs.FindAsync(colporteurId);
-
-            if (colporteur != null)
+            try
             {
-                var categories = await _context.Categories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
+                var colporteur = await _context.Colporteurs.Include(c => c.Categories).FirstOrDefaultAsync(c => c.Id == userId);
 
-                foreach (var category in categories)
-                    colporteur.Categories.Add(category);
+                if (colporteur != null)
+                {
+                    var categories = await _context.Categories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
+
+                    foreach (var category in categories)
+                    {   
+                        if (!colporteur.Categories.Any(c => c.Id == category.Id))
+                            colporteur.Categories.Add(category);
+                    }
+
+                    _context.Update(colporteur);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
 

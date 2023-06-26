@@ -7,6 +7,10 @@ import { WizardPage } from './pages/WizardPage';
 import { RequireAuth } from './config/RequireAuth';
 import { getAuthToken } from './auth/useAuth';
 import { useEffect } from 'react';
+import { DashboardPage } from './pages/DashboardPage';
+import { ColporteursPage } from './pages/ColporteursPage';
+import { ColporteurFormPage } from './pages/ColporteurFormPage';
+import { AccountStatementPage } from './pages/AccountStatementPage';
 
 const queryClient = new QueryClient();
 
@@ -26,6 +30,10 @@ function App() {
           <Route path='/' element={ <Layout /> }>
             {/* Public Routes */}
             <Route path='/' element={<LoginPage />} />
+            <Route path='/dashboard' element={<DashboardPage />} />
+            <Route path='/colporteurs' element={<ColporteursPage />} />
+            <Route path='/colporteurs/new' element={<ColporteurFormPage />} />
+            <Route path='/statement' element={<AccountStatementPage />} />
 
             {/* Private Routes */}
             <Route element={<RequireAuth />}>

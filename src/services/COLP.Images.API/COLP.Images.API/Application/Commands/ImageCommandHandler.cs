@@ -27,7 +27,9 @@ namespace COLP.Images.API.Application.Commands
             }
             
             byte[] fileData = Convert.FromBase64String(request.ImageData);
-            var image = new Image(request.Id, request.FileName, fileData, request.IsProfileImageActive);
+            string filename = DateTime.Now.ToString() + ".colporteur." + request.Id;
+
+            var image = new Image(request.Id, filename, fileData, request.IsProfileImageActive);
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
             var extension = Path.GetExtension(request.FileName);
 

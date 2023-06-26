@@ -1,4 +1,5 @@
 ﻿using COLP.Core.DomainObjects;
+using COLP.Images.API.Models;
 using COLP.Operation.API.Models;
 
 namespace COLP.Person.API.Models
@@ -12,9 +13,11 @@ namespace COLP.Person.API.Models
         public string RG { get; private set; }
         public string ShirtSize { get; private set; }
         public bool IsActive { get; private set; }
-        public DateTime SinceDate { get; private set; }
+        public DateTime? SinceDate { get; private set; }
         public ColporteurAddress Address { get; private set; }
         public Guid? TeamId { get; private set; }
+        public Guid? ImageId { get; private set; }
+        public Image Image { get; private set; }
 
         public ICollection<Goal> Goals { get; private set; }
         public ICollection<Category> Categories { get; private set; }
@@ -29,7 +32,7 @@ namespace COLP.Person.API.Models
             IsActive = true;
         }
 
-        public Colporteur(Guid id, string name, string lastName, string phoneNumber, string cpf, string rg, string shirtSize, bool isActive, DateTime sinceDate, Guid teamId)
+        public Colporteur(Guid id, string name, string lastName, string phoneNumber, string cpf, string rg, string shirtSize, bool isActive, DateTime? sinceDate, Guid? imageId, Guid teamId)
         {
             Id = id;
             Name = name;
@@ -40,6 +43,7 @@ namespace COLP.Person.API.Models
             ShirtSize = shirtSize;
             IsActive = isActive;
             SinceDate = sinceDate;
+            ImageId = imageId;
             TeamId = teamId;
         }
 

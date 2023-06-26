@@ -48,7 +48,7 @@ namespace COLP.Person.API.Integration
                     var colporteur = await colporteurService.GetColporteurById(message.UserId);
 
                     var colporteurCommand = new UpdateColporteurCommand(colporteur.Id, colporteur.Name, colporteur.LastName, colporteur.PhoneNumber, colporteur.CPF,
-                                                colporteur.RG, colporteur.ShirtSize, colporteur.IsActive, message.TeamId);
+                                                colporteur.RG, colporteur.ShirtSize, colporteur.IsActive, colporteur.SinceDate, colporteur.ImageId, message.TeamId);
 
                     ValidationResult success;
                 

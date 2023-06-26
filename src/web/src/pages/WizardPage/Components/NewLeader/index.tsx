@@ -13,16 +13,15 @@ import { Leader } from "../../Interfaces/Leader";
 import { SinceDateModal } from "../SinceDateModal";
 import { FormatDatePresentation } from "../../../../shared/Utils/FormatDatePresentation";
 import { Category } from "../../Interfaces/Category";
-import { GetCategories } from "../../Api/useLeaderApi";
+import { GetCategories, useSaveLeaderApi } from "../../Api/useLeaderApi";
 import { CategoryModal } from "../CategoryModal";
 import { useNavigate } from "react-router-dom";
 import { CancelModal } from "../../../../shared/Components/Modals/CancelModal";
 
 export function NewLeader(props: WizardProps) {
     const navigate = useNavigate();
-    const { previewImage, inputRef, handleImageUpload, handleButtonClick } = useImage();
-    
-    const [isLeaderSaved, setIsLeaderSaved] = useState(false);
+    const { previewImage, filename, inputRef, handleImageUpload, handleButtonClick } = useImage();
+    const { saveLeader, isLoading, error, isLeaderSaved, setIsLeaderSaved } = useSaveLeaderApi();
     
     const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
     const [isSinceDateModalOpen, setIsSinceDateModalOpen ] = useState(false);
@@ -50,6 +49,10 @@ export function NewLeader(props: WizardProps) {
     }, [categories]);
 
     useEffect(() => {
+        setLeader((prevTeam) => ({...prevTeam, categoryIds: selectedCategories.map((category) => category.id)}))
+    }, [selectedCategories]);
+
+    useEffect(() => {
         const uniqueCategoryIds = [...new Set(selectedCategories.map(category => category.id))];
         
         setLeader((prevLeader) => {
@@ -58,9 +61,12 @@ export function NewLeader(props: WizardProps) {
             if (previewImage)
                 updateLeader.imageData = previewImage.split(",")[1];
 
+            if (filename)
+                updateLeader.filename = filename;
+
             return updateLeader;
         })
-    }, [previewImage, selectedCategories]);
+    }, [previewImage, filename, selectedCategories]);
     
     function formatGoalValue (value: string) {
         const [integerPart, decimalPart] = value.split(',');
@@ -72,7 +78,7 @@ export function NewLeader(props: WizardProps) {
 
     function handleCategorySelect (category: Category, event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
-        
+
         selectedCategories.includes(category)
             ? setSelectedCategories(selectedCategories.filter((cat) => cat !== category))
             : setSelectedCategories([...selectedCategories, category])
@@ -117,8 +123,7 @@ export function NewLeader(props: WizardProps) {
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
-        setLeader((prevTeam) => ({...prevTeam, categoryIds: selectedCategories.map((category) => category.id)}))
-        console.log(leader);
+        saveLeader(leader);
     }
 
     return (
@@ -133,7 +138,7 @@ export function NewLeader(props: WizardProps) {
 
                         <Picture>
                             <MainImage onClick={handleButtonClick}>
-                            { previewImage ? <img src={previewImage} alt="Uploaded" /> : <Icon icon="fe:user" className="user-icon" width="100" /> }
+                                { previewImage ? <img src={previewImage} alt="Uploaded" /> : <Icon icon="fe:user" className="user-icon" width="100" /> }
                             </MainImage>
 
                             <input type="file" accept=".jpeg, .jpg, .png" ref={inputRef} onChange={handleImageUpload} />
