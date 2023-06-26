@@ -2,6 +2,7 @@ import { FormEvent, useRef, useState } from "react";
 
 export function useImage() {
     const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [filename, setFilename] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
     function isSupportedFileType (file: File) {
@@ -13,11 +14,12 @@ export function useImage() {
 
     function handleImageUpload (event: React.ChangeEvent<HTMLInputElement>) {
         event.preventDefault();
-        
+
         const file = event.target.files?.[0];
     
         if (file && isSupportedFileType(file)) {
             const reader = new FileReader();
+            setFilename(file.name);
     
             reader.onloadend = () => {
                 setPreviewImage(reader.result as string);
@@ -36,6 +38,7 @@ export function useImage() {
 
     return {
         previewImage,
+        filename,
         inputRef,
         handleImageUpload,
         handleButtonClick

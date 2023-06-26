@@ -6,10 +6,12 @@ namespace COLP.Person.API.Services
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IColporteurRepository _colporteurRepository;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository, IColporteurRepository colporteurRepository)
         {
             _categoryRepository = categoryRepository;
+            _colporteurRepository = colporteurRepository;
         }
 
         public async Task<IEnumerable<Category>> GetAll()
@@ -19,7 +21,9 @@ namespace COLP.Person.API.Services
 
         public async Task<bool> InsertCategoriesToColporteur(Guid colporteurId, IEnumerable<Guid> categoryIds)
         {
-            _categoryRepository.InsertCategoriesToColporteur(colporteurId, categoryIds);
+            var colporteur = await _colporteurRepository.GetById(colporteurId);
+
+            await _categoryRepository.InsertCategoriesToColporteur(colporteurId, categoryIds);
 
             return await _categoryRepository.UnitOfWork.Commit();
         }

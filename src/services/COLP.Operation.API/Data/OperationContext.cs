@@ -34,11 +34,17 @@ namespace COLP.Operation.API.Data
 
         public async Task<bool> Commit()
         {
-            var success = await base.SaveChangesAsync() > 0;
+            try { 
+                var success = await base.SaveChangesAsync() > 0;
 
-            if (success) await _mediatorHandler.PublishEvents(this);
+                if (success) await _mediatorHandler.PublishEvents(this);
 
-            return success;
+                return success;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

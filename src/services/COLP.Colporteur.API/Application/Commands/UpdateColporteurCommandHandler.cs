@@ -22,7 +22,7 @@ namespace COLP.Person.API.Application.Commands
                 return request.ValidationResult;
 
             var colporteur = new Colporteur(request.Id, request.Name, request.LastName, request.PhoneNumber, request.CPF, request.RG,
-                                            request.ShirtSize, request.IsActive, request.SinceDate, request.TeamId);
+                                            request.ShirtSize, request.IsActive, request.SinceDate, request.ImageId, request.TeamId);
 
             _colporteurRepository.Update(colporteur);
 

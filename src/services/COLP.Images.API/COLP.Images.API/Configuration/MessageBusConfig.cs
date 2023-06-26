@@ -2,7 +2,7 @@
 using COLP.Images.API.Services;
 using COLP.MessageBus;
 
-namespace COLP.Person.API.Configuration
+namespace COLP.Images.API.Configuration
 {
     public static class MessageBusConfig
     {

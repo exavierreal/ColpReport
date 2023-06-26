@@ -18,6 +18,7 @@ namespace COLP.Person.API.Data.Mappings
             builder.Property(c => c.IsActive).HasColumnType("bit");
             builder.Property(c => c.SinceDate).HasColumnType("datetime");
 
+            builder.HasOne(x => x.Image).WithMany().HasForeignKey(x => x.ImageId).HasPrincipalKey(x => x.Id).OnDelete(DeleteBehavior.SetNull);
             builder.HasOne(c => c.Address).WithOne(c => c.Colporteur);
             builder.HasMany(x => x.Goals).WithOne().HasForeignKey("ColporteurId");
 

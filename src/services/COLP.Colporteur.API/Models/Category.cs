@@ -9,7 +9,9 @@ namespace COLP.Person.API.Models
         public int Sequential { get; private set; }
         public ICollection<Colporteur> Colporteurs { get; private set; }
 
-        protected Category() { }
+        protected Category() {
+            Colporteurs = new List<Colporteur>();
+        }
 
         public Category(Guid id, string name, string acronym)
         {
