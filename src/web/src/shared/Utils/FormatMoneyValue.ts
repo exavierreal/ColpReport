@@ -3,5 +3,5 @@ export function FormatMoneyValue (value: string) {
     const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     const formattedDecimalPart = decimalPart ? decimalPart.slice(0, 2) : '';
 
-    return `R$ ${formattedIntegerPart},${formattedDecimalPart.padEnd(2, '0')}`;
+    return `${formattedIntegerPart},${formattedDecimalPart.padEnd(2, '0')}`;
 }

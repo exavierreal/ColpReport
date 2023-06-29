@@ -55,7 +55,7 @@ export function GoalCard ({ colporteur, setColporteur }: ColpParamsProps) {
                     </CameraIcon>
                 </Picture>
 
-                <Subheading className="price">{ FormatMoneyValue(colporteur.goal.toString()) }</Subheading>
+                <Subheading className="price">R$ { FormatMoneyValue(colporteur.goal.toString()) }</Subheading>
 
                 <DefineButtonMob text="Definir Meta" onClick={handleToggleGoalModal} />
             </Content>

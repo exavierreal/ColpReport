@@ -11,4 +11,5 @@ export const SelectButton = styled.button<SelectInputProps>`
     color: ${(props => props.selectedColor ? props.selectedColor : 'var(--dark-v2)')};
     text-transform: uppercase;
     box-shadow: 0 0 20px 3px rgba(137, 144, 163, .2);
+    cursor: pointer;
 `;

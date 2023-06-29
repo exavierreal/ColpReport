@@ -26,8 +26,8 @@ export const menuItems: MenuAttr[] = [
         path: ['/operation']
     },
     {
-        title: 'Relatórios',
-        icon: 'akar-icons:file',
-        path: ['/reports']
+        title: 'Sair',
+        icon: 'akar-icons:sign-out',
+        path: ['/']
     }
 ];

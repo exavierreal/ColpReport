@@ -19,3 +19,8 @@ export const MovementSection = styled.div`
     margin: 0 36px;
 `;
 
+export const Input = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;

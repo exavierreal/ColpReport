@@ -8,7 +8,6 @@ import { ParamsProps } from "../../Interfaces/ParamsProps";
 export function Movement({ setMovementSelected }: ParamsProps) {
     const movements = MovementMock;
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    
 
     function handleSelectInput(index: number, id: number) {
         setActiveIndex(index);
@@ -24,7 +23,7 @@ export function Movement({ setMovementSelected }: ParamsProps) {
                     <SelectInput
                         key={index}
                         text={movement.name}
-                        selectedColor="var(--success-v1)"
+                        selectedColor={movement.id === 1 ? "var(--success-v1)" :"var(--danger-v1)"}
                         isActive={index === activeIndex}
                         onClick={() => handleSelectInput(index, movement.id)} />
                 ))}
