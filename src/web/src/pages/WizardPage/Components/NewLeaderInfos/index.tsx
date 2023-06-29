@@ -1,7 +1,7 @@
 import { ActionButtons } from "../../../../shared/Components/Buttons/ActionButtons";
 import { HeaderBar } from "../../../../shared/Components/HeaderBar";
 import { ProgressBar } from "../../../../shared/Components/ProgressBar";
-import { Subtitle } from "../../../../shared/Components/Subtitle";
+import { Subtitle } from "../../../../shared/Components/Titles/Subtitle";
 import { WizardProps } from "../../Interfaces/WizardProps";
 import { Block, Container, Content, Form, Input } from "./styles";
 

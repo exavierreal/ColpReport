@@ -1,5 +1,5 @@
 import { useState, KeyboardEvent, FocusEvent } from "react";
-import { getAssociationSuggestion, getUnionSuggestions } from "../Api/useTeamApi";
+import { getAssociationSuggestion, getUnionSuggestions } from "../../../api/useTeamApi";
 import { UnionSuggestion } from "../Interfaces/UnionSuggestions";
 import { AssociationSuggestion } from "../Interfaces/AssociationSuggestion";
 

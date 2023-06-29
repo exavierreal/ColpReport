@@ -5,14 +5,14 @@ import { CameraIcon, Container, ContainerDataList, Content, DataList, DataListIt
 import { ProgressBar } from "../../../../shared/Components/ProgressBar";
 import { ActionButtons } from "../../../../shared/Components/Buttons/ActionButtons";
 import { WizardProps } from "../../Interfaces/WizardProps";
-import { useImage } from "../../Hooks/useImage";
+import { useImage } from "../../../../shared/Hooks/useImage";
 import { useDataList } from "../../Hooks/useDataList";
-import { GoalModal } from "../GoalModal";
+import { GoalModal } from "../../../../shared/Components/Modals/GoalModal";
 import { useNavigate } from "react-router-dom";
 import { CancelModal } from "../../../../shared/Components/Modals/CancelModal";
 import { Team } from "../../Interfaces/Team";
 import { UnionSuggestion } from "../../Interfaces/UnionSuggestions";
-import { getAssociationById, getSaveTeam, getUnionById, useSaveTeamApi } from "../../Api/useTeamApi";
+import { getAssociationById, getSaveTeam, getUnionById, useSaveTeamApi } from "../../../../api/useTeamApi";
 import { getUserToken } from "../../../../auth/useAuth";
 import { Association } from "../../Interfaces/Association";
 

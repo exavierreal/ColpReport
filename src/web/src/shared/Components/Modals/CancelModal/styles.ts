@@ -11,7 +11,7 @@ export const Overlay = styled.div`
     width: 100vw;
     height: 100vh;
     background: var(--overlay);
-    z-index: 2;
+    z-index: 9999;
 `;
 
 export const Modal = styled.div`

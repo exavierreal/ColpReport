@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { CategoryBoxProps } from "../../Interfaces/CategoryBoxProps";
+import { CategoryBoxProps } from "../../../../shared/Interfaces/CategoryBoxProps";
 
 export const Container = styled.div``;
 
@@ -99,29 +99,4 @@ export const Button = styled.button`
     border-radius: 25px;
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0, 0, 0, .25);
-    //filter: drop-shadow(0 0 10px rgba(0, 0, 0, .25));
-`;
-
-export const Categories = styled.div`
-    margin: 20px 40px 30px;
-`;
-
-export const CategoriesBoxes = styled.div`
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 14px;
-    margin-top: 14px;
-`;
-
-export const CategoryBox = styled.button<CategoryBoxProps>`
-    background: #FFFFFF;
-    width: 160px;
-    height: 40px;
-    border: ${(props) => (props.selected ? '1px solid var(--primary-v3)' : '1px solid var(--gray-v2)')};
-    border-radius: 5px;
-    font: 400 14px 'Roboto';
-    color: ${(props) => (props.selected ? 'var(--primary-v3)' : 'var(--dark-v2)')};
-    box-shadow: 0 0 20px 3px rgba(137, 144, 163, .2);
-    cursor: pointer;
 `;

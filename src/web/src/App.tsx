@@ -9,8 +9,10 @@ import { getAuthToken } from './auth/useAuth';
 import { useEffect } from 'react';
 import { DashboardPage } from './pages/DashboardPage';
 import { ColporteursPage } from './pages/ColporteursPage';
-import { ColporteurFormPage } from './pages/ColporteurFormPage';
+import { ColporteurNewEditPage } from './pages/ColporteurNewEditPage';
 import { AccountStatementPage } from './pages/AccountStatementPage';
+import { OperationPage } from './pages/OperationPage';
+import { ReportPage } from './pages/ReportPage';
 
 const queryClient = new QueryClient();
 
@@ -32,8 +34,10 @@ function App() {
             <Route path='/' element={<LoginPage />} />
             <Route path='/dashboard' element={<DashboardPage />} />
             <Route path='/colporteurs' element={<ColporteursPage />} />
-            <Route path='/colporteurs/new' element={<ColporteurFormPage />} />
+            <Route path='/colporteurs/new' element={<ColporteurNewEditPage />} />
             <Route path='/statement' element={<AccountStatementPage />} />
+            <Route path='/operation' element={<OperationPage />} />
+            <Route path='/reports' element={<ReportPage />} />
 
             {/* Private Routes */}
             <Route element={<RequireAuth />}>
