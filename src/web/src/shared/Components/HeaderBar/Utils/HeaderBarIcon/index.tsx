@@ -18,7 +18,17 @@ export function HeaderBarIcon (props: HeaderBarIconProps) {
         case 'next':
             return <Icon onClick={() => props.handleClick(false)} icon="akar-icons:arrow-right" width="30" className="icon" />
         case 'profile':
-            return 
+            return (
+                <div className="profile">
+                    <Icon onClick={() => props.handleClick(false)} icon="fe:user" width="36" className="icon" />
+                </div>
+            )
+        case 'sign-out':
+            return <Icon onClick={() => props.handleClick(false)} icon="akar-icons:sign-out" width="30" className="icon" />
+        case 'search':
+            return <Icon onClick={() => props.handleClick(false)} icon="akar-icons:search" width="30" className="icon" />
+        case 'statistic':
+            return <Icon onClick={() => props.handleClick(false)} icon="akar-icons:statistic-up" width="30" className="icon" />
         default:
             return <i className="empty"></i>
     }
