@@ -29,7 +29,7 @@ export function MovementType({movementSelected, setMovementTypeSelected}: Params
                     <SelectInput
                         key={index}
                         text={type.name}
-                        selectedColor={ movementSelected === 1 ?  "var(--primary-v3)" :  "var(--danger-v1)" }
+                        selectedColor={ "var(--primary-v3)" }
                         isActive={index === activeIndex}
                         onClick={() => handleSelectInput(index, type.id)} />
                 ))}

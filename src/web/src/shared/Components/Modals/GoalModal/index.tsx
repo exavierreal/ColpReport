@@ -2,9 +2,10 @@ import { Icon } from "@iconify-icon/react";
 import { ArrowsButton, Container, GoalField, GoalInput, HeadImage, Heading, Label, Modal, Overlay, SaveButton, Subheading, Title } from "./styles";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { GoalModalProps } from "../../../Interfaces/GoalModalProps";
+import { FormatMoneyValue } from "../../../Utils/FormatMoneyValue";
 
 export function GoalModal({ onCloseModal, onSaveGoal, initialValue, type }: GoalModalProps) {
-    const [inputValue, setInputValue] = useState(formatValue(initialValue.toString()));
+    const [inputValue, setInputValue] = useState(FormatMoneyValue(initialValue.toString()));
     const inputRef = useRef<HTMLInputElement>(null);
     const prevCursorPosition = useRef<number | null>(null);
 
@@ -27,7 +28,7 @@ export function GoalModal({ onCloseModal, onSaveGoal, initialValue, type }: Goal
         const value = e.target.value;
         const cleanedValue = value.replace(/[^\d,]/g, '');
 
-        const formattedValue = formatValue(cleanedValue);
+        const formattedValue = FormatMoneyValue(cleanedValue);
 
         setInputValue(formattedValue);
 
@@ -51,17 +52,9 @@ export function GoalModal({ onCloseModal, onSaveGoal, initialValue, type }: Goal
         if (value < 0)
             value = 0;
         
-        const formattedValue = formatValue(value.toString());
+        const formattedValue = FormatMoneyValue(value.toString());
 
         setInputValue(formattedValue);
-    }
-
-    function formatValue (value: string) {
-        const [integerPart, decimalPart] = value.split(',');
-        const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        const formattedDecimalPart = decimalPart ? decimalPart.slice(0, 2) : '';
-
-        return `${formattedIntegerPart},${formattedDecimalPart.padEnd(2, '0')}`;
     }
 
     function handleClose() {
