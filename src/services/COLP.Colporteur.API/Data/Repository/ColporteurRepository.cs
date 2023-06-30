@@ -22,7 +22,7 @@ namespace COLP.Person.API.Data.Repository
 
         public async Task<Colporteur> GetById(Guid id)
         {
-            return await _context.Colporteurs.FindAsync(id);
+            return await _context.Colporteurs.Include(c => c.ColporteurCategories).FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public void Insert(Colporteur colporteur)

@@ -5,13 +5,16 @@ import { useMutation } from "@tanstack/react-query";
 import { Leader } from "../pages/WizardPage/Interfaces/Leader";
 
 const BASE_URL = "https://localhost:7168/api/"
-
 const COLPORTEUR_URL = BASE_URL + "Colporteur/"
 
 const saveLeader = (leader: Leader, userId: string | null) => {
     return axios.post(COLPORTEUR_URL + "leader", leader, {
         headers: {'X-User-Id': userId}
     })
+}
+
+export async function getSavedLeader(userId: string | null) {
+    return await axios.get<Leader>(COLPORTEUR_URL + "id", { params: {id: userId} }).then(response => response.data);
 }
 
 export function useSaveLeaderApi() {

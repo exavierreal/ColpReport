@@ -1,10 +1,12 @@
-﻿using COLP.Person.API.Models;
+﻿using COLP.Person.API.Dtos;
+using COLP.Person.API.Models;
 
 namespace COLP.Person.API.Services
 {
     public interface IColporteurService
     {
         Task<Colporteur> GetColporteurById(Guid ColporteurId);
-        Task<bool> UpdateSinceDateAndImage(Guid colporteurId, DateTime sinceDate, Guid imageId);
+        Task LoadImageAsync(Colporteur colporteur);
+        Task<bool> UpdateColporteur(ColporteurDto colporteur);
     }
 }

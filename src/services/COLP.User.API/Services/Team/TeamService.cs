@@ -23,5 +23,12 @@ namespace COLP.Management.API.Services
 
             return await _repository.UnitOfWork.Commit();
         }
+
+        public async Task<bool> UpdateTeam(Team team)
+        {
+            _repository.Update(team);
+
+            return await _repository.UnitOfWork.Commit();
+        }
     }
 }

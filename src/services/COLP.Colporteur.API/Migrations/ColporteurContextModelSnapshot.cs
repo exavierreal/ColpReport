@@ -22,21 +22,6 @@ namespace COLP.Person.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("CategoryColporteur", b =>
-                {
-                    b.Property<Guid>("CategoriesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ColporteursId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CategoriesId", "ColporteursId");
-
-                    b.HasIndex("ColporteursId");
-
-                    b.ToTable("ColporteurCategories", (string)null);
-                });
-
             modelBuilder.Entity("COLP.Images.API.Models.Image", b =>
                 {
                     b.Property<Guid>("Id")
@@ -192,17 +177,25 @@ namespace COLP.Person.API.Migrations
                     b.ToTable("ColporteurAddress", (string)null);
                 });
 
-            modelBuilder.Entity("CategoryColporteur", b =>
+            modelBuilder.Entity("COLP.Person.API.Models.ColporteurCategory", b =>
                 {
-                    b.HasOne("COLP.Person.API.Models.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .IsRequired();
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasOne("COLP.Person.API.Models.Colporteur", null)
-                        .WithMany()
-                        .HasForeignKey("ColporteursId")
-                        .IsRequired();
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ColporteurId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("ColporteurId");
+
+                    b.ToTable("ColporteurCategories");
                 });
 
             modelBuilder.Entity("COLP.Operation.API.Models.Goal", b =>
@@ -232,9 +225,33 @@ namespace COLP.Person.API.Migrations
                     b.Navigation("Colporteur");
                 });
 
+            modelBuilder.Entity("COLP.Person.API.Models.ColporteurCategory", b =>
+                {
+                    b.HasOne("COLP.Person.API.Models.Category", "Category")
+                        .WithMany("ColporteurCategories")
+                        .HasForeignKey("CategoryId")
+                        .IsRequired();
+
+                    b.HasOne("COLP.Person.API.Models.Colporteur", "Colporteur")
+                        .WithMany("ColporteurCategories")
+                        .HasForeignKey("ColporteurId")
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Colporteur");
+                });
+
+            modelBuilder.Entity("COLP.Person.API.Models.Category", b =>
+                {
+                    b.Navigation("ColporteurCategories");
+                });
+
             modelBuilder.Entity("COLP.Person.API.Models.Colporteur", b =>
                 {
                     b.Navigation("Address");
+
+                    b.Navigation("ColporteurCategories");
 
                     b.Navigation("Goals");
                 });

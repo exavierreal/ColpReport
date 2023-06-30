@@ -12,9 +12,9 @@ namespace COLP.Person.API.Application.Events
         public string RG { get; private set; }
         public string ShirtSize { get; private set; }
         public bool isActive { get; private set; }
-        public Guid TeamId { get; private set; }
+        public Guid? TeamId { get; private set; }
 
-        public UpdateColporteurEvent(Guid aggregateId, Guid id, string name, string lastName, string phoneNumber, string cpf, string rg, string shirtSize, bool isActive, Guid teamId)
+        public UpdateColporteurEvent(Guid aggregateId, Guid id, string name, string lastName, string phoneNumber, string cpf, string rg, string shirtSize, bool isActive, Guid? teamId)
         {
             AggregateId = aggregateId;
             Id = id;

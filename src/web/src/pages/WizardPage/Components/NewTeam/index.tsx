@@ -19,7 +19,18 @@ import { Association } from "../../Interfaces/Association";
 
 export function NewTeam(props: WizardProps) {
     const navigate = useNavigate();
+    
+    const { saveTeam, isLoading, error, isTeamSaved, setIsTeamSaved } = useSaveTeamApi();
+    const { previewImage, inputRef, handleImageUpload, handleButtonClick } = useImage();
+    const {  handleInputFocus, handleInputBlur, handleInputChange, handleKeyOnInput, handleMouseEnter, handleOptionClick,
+             setDisplayUnionSelected, setDisplayAssociationSelected, setSelectedAssociation, setSelectedUnion,
+             isUnionInputFocused, isAssociationInputFocused, keyboardFocusIndex, unionOptions, associationOptions,
+             selectedUnion, selectedAssociation, selectedUnionIndex, selectedAssociationIndex, displayUnionSelected, displayAssociationSelected
+    } = useDataList();
 
+    const userToken = getUserToken();
+    const userId = userToken ? userToken.id : null;
+    
     const [showNextIcon, setShowNextIcon] = useState(false);
     const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
@@ -29,18 +40,6 @@ export function NewTeam(props: WizardProps) {
     const teamNameInputRef = useRef<HTMLInputElement>(null);
     const unionInputRef = useRef<HTMLInputElement>(null);
     const associationInputRef = useRef<HTMLInputElement>(null);
-    
-    const { previewImage, inputRef, handleImageUpload, handleButtonClick } = useImage();
-    const {  handleInputFocus, handleInputBlur, handleInputChange, handleKeyOnInput, handleMouseEnter, handleOptionClick,
-             setDisplayUnionSelected, setDisplayAssociationSelected,
-             isUnionInputFocused, isAssociationInputFocused, keyboardFocusIndex, unionOptions, associationOptions,
-             selectedUnion, selectedAssociation, selectedUnionIndex, selectedAssociationIndex, displayUnionSelected, displayAssociationSelected
-    } = useDataList();
-
-    const { saveTeam, isLoading, error, isTeamSaved, setIsTeamSaved } = useSaveTeamApi();
-
-    const userToken = getUserToken();
-    const userId = userToken ? userToken.id : null;
 
     useEffect(() => {
         setTeam((prevTeam) => {
@@ -80,6 +79,9 @@ export function NewTeam(props: WizardProps) {
                     setTeam(data);
                     const association = await getAssociationById<Association>(data.associationId!);
                     const union = await getUnionById<UnionSuggestion>(association.unionId!);
+
+                    setSelectedUnion(union);
+                    setSelectedAssociation({ id: association.id, name: association.name, acronym: association.acronym });
 
                     if (teamNameInputRef.current)
                         teamNameInputRef.current.value = data.name;
@@ -140,6 +142,7 @@ export function NewTeam(props: WizardProps) {
 
     function handleSaveGoal(value: number) {
         setTeam({ ...team, goal: value });
+        setIsTeamSaved(!isTeamSaved);
     }
 
     function handleCancel (choice?: string) {

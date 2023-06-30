@@ -7,11 +7,11 @@ using MediatR;
 
 namespace COLP.Operation.API.Application.Commands
 {
-    public class GoalCommandHandler : CommandHandler, IRequestHandler<SaveGoalCommand, ValidationResult>
+    public class SaveGoalCommandHandler : CommandHandler, IRequestHandler<SaveGoalCommand, ValidationResult>
     {
         private readonly IGoalRepository _goalRepository;
 
-        public GoalCommandHandler(IGoalRepository goalRepository)
+        public SaveGoalCommandHandler(IGoalRepository goalRepository)
         {
             _goalRepository = goalRepository;
         }
@@ -22,7 +22,7 @@ namespace COLP.Operation.API.Application.Commands
 
             var goal = new Goal(request.Value, request.Name, request.TeamId, request.ColporteurId);
 
-            _goalRepository.Add(goal);
+            _goalRepository.Insert(goal);
 
             goal.AddEvent(new SavedGoalEvent(request.Value, request.Name, request.TeamId, request.ColporteurId));
 

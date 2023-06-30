@@ -21,7 +21,8 @@ namespace COLP.Person.API.Data
 
         public DbSet<Colporteur> Colporteurs { get; set; }
         public DbSet<ColporteurAddress> ColporteurAddresses { get; set; }
-        public DbSet<Category> Categories { get; set; } 
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<ColporteurCategory> ColporteurCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

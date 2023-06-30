@@ -14,8 +14,6 @@ namespace COLP.Person.API.Data.Mappings
             
             builder.Property(c => c.Sequential).IsRequired();
             builder.HasIndex(c => c.Sequential).IsUnique();
-
-            builder.HasMany(c => c.Colporteurs).WithMany(c => c.Categories).UsingEntity(x => x.ToTable("ColporteurCategories"));
         }
     }
 }

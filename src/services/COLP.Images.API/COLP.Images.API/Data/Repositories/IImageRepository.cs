@@ -7,6 +7,6 @@ namespace COLP.Images.API.Data.Repository
     {
         void Add(Image image);
 
-        Image GetById(Guid id);
+        Task<Image> GetById(Guid id);
     }
 }

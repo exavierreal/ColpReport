@@ -41,6 +41,8 @@ export function useImage() {
         filename,
         inputRef,
         handleImageUpload,
-        handleButtonClick
+        handleButtonClick,
+        setPreviewImage,
+        setFilename
     };
 }

@@ -6,6 +6,7 @@ using COLP.Management.API.Services;
 using COLP.Management.API.ViewModels.Team;
 using COLP.MessageBus;
 using COLP.Operation.API.Integration;
+using COLP.Operation.API.Models;
 using COLP.Operation.API.Services;
 using COLP.Person.API.Integration;
 using COLP.Person.API.Services;
@@ -34,7 +35,7 @@ namespace COLP.Management.API.Controllers
         [HttpGet("get-team-by-userid")]
         public async Task<ActionResult> GetTeamByUserId(Guid userId)
         {
-            var result = await GetTeamById(userId);
+            var result = await GetTeamByColpId(userId);
 
             if (result == null)
             {
@@ -69,11 +70,17 @@ namespace COLP.Management.API.Controllers
             }
 
             var teamId = Guid.NewGuid();
+            var hasTeamSaved = false;
 
-            var hasTeamSaved = imageId != Guid.Empty ?
-                                    await _teamService.SaveTeam(new Team(teamId, teamDto.Name, teamDto.AssociationId, imageId)) :
-                                    await _teamService.SaveTeam(new Team(teamId, teamDto.Name, teamDto.AssociationId, null));
-
+            if (await hasUserRegisteredTeam(userId))
+            {
+                hasTeamSaved = await UpdateTeam(userId, teamDto, imageId);
+                teamId = await GetTeamId(userId);
+            }
+            else
+            {
+                hasTeamSaved = await InsertTeam(imageId, teamDto, teamId);
+            }
             
             if (hasTeamSaved)
             {
@@ -101,6 +108,7 @@ namespace COLP.Management.API.Controllers
 
         #region Private Methods
 
+        #region Save Image
         private async Task<ResponseMessage> SaveImage(TeamViewModel team, Guid id)
         {
             var requestedImage = new RequestedImageIntegrationEvent(id, team.FileName, team.ImageData, true);
@@ -115,13 +123,22 @@ namespace COLP.Management.API.Controllers
             }
         }
 
+        #endregion
+
+        #region Save Goal
         private async Task<ResponseMessage> SaveGoal(decimal value, Guid teamId)
         {
-            var goalName = "Meta Inicial";
-            var requestedGoal = new RequestedGoalIntegrationEvent(value, goalName, teamId, null, null);
-
             try
             {
+                Goal goalTeam = await _goalService.GetGoalByTeamId(teamId);
+                var goalName = "Meta Inicial";
+                var requestedGoal = new RequestedGoalIntegrationEvent(value, goalName, teamId, null, null);
+
+                if (goalTeam != null)
+                {
+                    requestedGoal = new RequestedGoalIntegrationEvent(value, goalName, teamId, null, goalTeam.Id);
+                }
+
                 return await _bus.RequestAsync<RequestedGoalIntegrationEvent, ResponseMessage>(requestedGoal);
             }
             catch
@@ -129,7 +146,45 @@ namespace COLP.Management.API.Controllers
                 throw;
             }
         }
-        
+
+        #endregion
+
+        #region Save Team
+        private async Task<bool> InsertTeam(Guid imageId, TeamViewModel teamDto, Guid teamId)
+        {
+            if (imageId != Guid.Empty)
+                return await _teamService.SaveTeam(new Team(teamId, teamDto.Name, teamDto.AssociationId, imageId));
+
+            return await _teamService.SaveTeam(new Team(teamId, teamDto.Name, teamDto.AssociationId, null));
+        }
+
+        #endregion
+
+        #region Update Team
+        private async Task<bool> UpdateTeam(Guid userId, TeamViewModel teamDto, Guid imageId)
+        {
+            try
+            {
+                var colporteur = await _colporteurService.GetColporteurById(userId);
+
+                var team = await _teamService.GetTeamById((Guid)colporteur.TeamId);
+
+                team.UpdateTeamProperties(teamDto.Name, teamDto.AssociationId, null);
+
+                if (imageId != Guid.Empty)
+                    team.UpdateTeamProperties(teamDto.Name, teamDto.AssociationId, imageId);
+
+                return await _teamService.UpdateTeam(team);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Adding the Team For Leader
         private async Task<ResponseMessage> AddTeamForLeader(Guid teamId, Guid userId)
         {
             var requestedColporteur = new RequestedColporteurIntegrationEvent(userId, teamId);
@@ -142,25 +197,62 @@ namespace COLP.Management.API.Controllers
                 throw;
             }
         }
-        
-        private async Task<TeamViewModel> GetTeamById(Guid userId)
+
+        #endregion
+
+        #region Get the Team of Leader
+        private async Task<TeamViewModel> GetTeamByColpId(Guid userId)
+        {
+            try
+            {
+                var colporteur = await _colporteurService.GetColporteurById(userId);
+
+                if (colporteur == null || colporteur.TeamId == null) return null;
+
+                var team = await _teamService.GetTeamById((Guid)colporteur.TeamId);
+                var goal = await _goalService.GetGoalByTeamId(team.Id);
+                var imageData = team.ImageId != null ? Convert.ToBase64String(team.Image.ImageData) : null;
+
+                return new TeamViewModel
+                {
+                    Name = team.Name,
+                    AssociationId = team.AssociationId,
+                    ImageData = imageData,
+                    Goal = goal.Value
+                };
+
+            }catch(Exception e )
+            {
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Verify if the user has a Team registered
+        private async Task<bool> hasUserRegisteredTeam (Guid userId)
         {
             var colporteur = await _colporteurService.GetColporteurById(userId);
 
-            if (colporteur == null || colporteur.TeamId == null) return null;
+            if (colporteur == null || colporteur.TeamId == null) return false;
 
             var team = await _teamService.GetTeamById((Guid)colporteur.TeamId);
-            var goal = await _goalService.GetGoalByTeamId(team.Id);
-            var imageData = team.ImageId != null ? Convert.ToBase64String(team.Image.ImageData) : null;
 
-            return new TeamViewModel
-            {
-                Name = team.Name,
-                AssociationId = team.AssociationId,
-                ImageData = imageData,
-                Goal = goal.Value
-            };
+            return team != null;
         }
+
+        #endregion
+
+        #region Get Team Id
+        private async Task<Guid> GetTeamId(Guid userId)
+        {
+            var colporteur = await _colporteurService.GetColporteurById(userId);
+            var team = await _teamService.GetTeamById((Guid)colporteur.TeamId);
+
+            return team.Id;
+        }
+
+        #endregion
 
         #endregion
     }

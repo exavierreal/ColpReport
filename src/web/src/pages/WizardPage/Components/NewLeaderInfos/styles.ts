@@ -9,8 +9,8 @@ export const Content = styled.div`
     margin-top: 121px;
 `;
 
-export const Form = styled.div`
-    margin-bottom: 32px;
+export const Form = styled.form`
+    
 `;
 
 export const Input = styled.div`
@@ -36,6 +36,10 @@ export const Input = styled.div`
         &:focus {
             border: 2px solid var(--primary-v3);
         }
+    }
+    
+    &.mb-last {
+        margin-bottom: 32px;
     }
 `;
 

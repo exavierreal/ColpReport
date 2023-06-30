@@ -1,4 +1,5 @@
 ﻿using COLP.Core.DomainObjects;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 
 namespace COLP.Operation.API.Models
 {
@@ -10,6 +11,14 @@ namespace COLP.Operation.API.Models
         public Guid? ColporteurId { get; private set; }
 
         public Goal(decimal value, string name, Guid? teamId, Guid? colporteurId)
+        {
+            Value = value;
+            Name = name;
+            TeamId = teamId;
+            ColporteurId = colporteurId;
+        }
+
+        public void UpdateProperties(decimal value, string name, Guid? teamId, Guid? colporteurId)
         {
             Value = value;
             Name = name;

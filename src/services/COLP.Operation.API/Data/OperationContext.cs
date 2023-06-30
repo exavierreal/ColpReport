@@ -43,7 +43,7 @@ namespace COLP.Operation.API.Data
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
     }

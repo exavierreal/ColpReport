@@ -33,5 +33,16 @@ namespace COLP.Person.API.Controllers
 
             return Ok(categoryVM);
         }
+
+        [HttpGet("id")]
+        public async Task<ActionResult> GetById(Guid id)
+        {
+            var category = await _categoryService.GetById(id);
+
+            if (category == null)
+                return CustomResponse("Categoria não foi encontrada");
+
+            return CustomResponse(category);
+        }
     }
 }

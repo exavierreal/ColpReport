@@ -8,6 +8,9 @@ using COLP.Core.Mediator;
 using COLP.Operation.API.Data.Repositories;
 using COLP.Operation.API.Data;
 using COLP.Operation.API.Services;
+using COLP.Images.API.Services;
+using COLP.Images.API.Data.Repository;
+using COLP.Images.API.Data;
 
 namespace COLP.Management.API.Configuration
 {
@@ -18,17 +21,20 @@ namespace COLP.Management.API.Configuration
             services.AddScoped<IMediatorHandler, MediatorHandler>();
 
             services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IColporteurService, ColporteurService>();
             services.AddScoped<IUnionService, UnionService>();
             services.AddScoped<IAssociationService, AssociationService>();
             services.AddScoped<IGoalService, GoalService>();
 
+            services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IUnionRepository, UnionRepository>();
             services.AddScoped<IAssociationRepository, AssociationRepository>();
             services.AddScoped<IColporteurRepository, ColporteurRepository>();
             services.AddScoped<IGoalRepository, GoalRepository>();
 
+            services.AddScoped<ImageContext>();
             services.AddScoped<ManagementContext>();
             services.AddScoped<ColporteurContext>();
             services.AddScoped<OperationContext>();
