@@ -20,28 +20,32 @@ namespace COLP.Person.API.Data.Repository
             return await _context.Categories.OrderBy(c => c.Sequential).ToListAsync();
         }
 
+        public async Task<Category> GetById(Guid id)
+        {
+            return await _context.Categories.FindAsync(id);
+        }
+
         public async Task InsertCategoriesToColporteur(Guid userId, IEnumerable<Guid> categoryIds)
         {
-            try
-            {
-                var colporteur = await _context.Colporteurs.Include(c => c.Categories).FirstOrDefaultAsync(c => c.Id == userId);
+            
+            var colporteur = await _context.Colporteurs.Include(c => c.ColporteurCategories).FirstOrDefaultAsync(c => c.Id == userId);
 
-                if (colporteur != null)
+            if (colporteur != null)
+            {
+                var existingCategoryIds = colporteur.ColporteurCategories.Select(cc => cc.CategoryId).ToList();
+
+                var newCategoryIds = categoryIds.Except(existingCategoryIds).ToList();
+
+                foreach (var categoryId in newCategoryIds)
                 {
-                    var categories = await _context.Categories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
+                    var category = await _context.Categories.FindAsync(categoryId);
 
-                    foreach (var category in categories)
-                    {   
-                        if (!colporteur.Categories.Any(c => c.Id == category.Id))
-                            colporteur.Categories.Add(category);
+                    if (category != null)
+                    {
+                        var colporteurCategory = new ColporteurCategory(colporteur.Id, category.Id);
+                        _context.ColporteurCategories.Add(colporteurCategory);
                     }
-
-                    _context.Update(colporteur);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw;
             }
         }
 

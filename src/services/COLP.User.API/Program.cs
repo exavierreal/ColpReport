@@ -1,3 +1,4 @@
+using COLP.Images.API.Data;
 using COLP.Management.API.Configuration;
 using COLP.Management.API.Data;
 using COLP.Operation.API.Data;
@@ -25,6 +26,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<ManagementContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDbContext<ColporteurContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDbContext<OperationContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ImageContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

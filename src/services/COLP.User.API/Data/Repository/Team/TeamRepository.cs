@@ -1,6 +1,5 @@
 ﻿using COLP.Core.Data;
 using COLP.Management.API.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace COLP.Management.API.Data.Repository
 {
@@ -19,6 +18,12 @@ namespace COLP.Management.API.Data.Repository
         {
             _context.Add(team);
         }
+
+        public void Update(Team team)
+        {
+            _context.Update(team);
+        }
+
         public async Task<Team> GetTeamById(Guid id)
         {
             return await _context.Teams.FindAsync(id);

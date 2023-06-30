@@ -4,6 +4,6 @@ namespace COLP.Images.API.Services
 {
     public interface IImageService
     {
-        Image GetImage(Guid id);
+        Task<Image> GetImage(Guid id);
     }
 }

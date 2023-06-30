@@ -1,18 +1,18 @@
 import { Dispatch, SetStateAction, MouseEvent, useState, useEffect, FormEvent } from "react";
-import { Category } from "../../../Models/Category.model";
+import { CategoryModel } from "../../../Models/Category.model";
 import { Subtitle } from "../../Titles/Subtitle";
 import { Container, SelectionBox, SelectionBoxes } from "./styles";
 import { GetCategories } from "../../../../api/useCategoryApi";
 import { CategoryModal } from "../../Modals/CategoryModal";
 
 interface CategoriesProps {
-    selectedCategories: Category[];
-    setSelectedCategories: Dispatch<SetStateAction<Category[]>>;
+    selectedCategories: CategoryModel[];
+    setSelectedCategories: Dispatch<SetStateAction<CategoryModel[]>>;
 }
 
 export function Categories({ selectedCategories, setSelectedCategories }: CategoriesProps) {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [categoriesDisplayed, setCategoriesDisplayed] = useState<Category[]>([]);
+    const [categories, setCategories] = useState<CategoryModel[]>([]);
+    const [categoriesDisplayed, setCategoriesDisplayed] = useState<CategoryModel[]>([]);
 
     const [isCategoriesModalOpen, setIsCategoriesModalOpen] = useState(false);
     
@@ -27,9 +27,9 @@ export function Categories({ selectedCategories, setSelectedCategories }: Catego
 
     useEffect(() => {
         setCategoriesDisplayed(categories.slice(0, 3));
-    }, [categories]);
+    }, [categories, selectedCategories]);
 
-    function handleCategorySelect (category: Category, event: MouseEvent<HTMLButtonElement>) {
+    function handleCategorySelect (category: CategoryModel, event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
 
         selectedCategories.includes(category)
@@ -52,7 +52,7 @@ export function Categories({ selectedCategories, setSelectedCategories }: Catego
                 {categoriesDisplayed?.map((category) => (
                     <SelectionBox
                         key={category.id}
-                        selected={selectedCategories.includes(category)}
+                        selected={selectedCategories.some(c => c.id === category.id)}
                         onClick={(e) => handleCategorySelect(category, e)}>
                             { category.name }
                     </SelectionBox>

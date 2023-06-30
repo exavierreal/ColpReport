@@ -19,6 +19,11 @@ namespace COLP.Person.API.Services
             return await _categoryRepository.GetAll();
         }
 
+        public async Task<Category> GetById(Guid id)
+        {
+            return await _categoryRepository.GetById(id);
+        }
+
         public async Task<bool> InsertCategoriesToColporteur(Guid colporteurId, IEnumerable<Guid> categoryIds)
         {
             var colporteur = await _colporteurRepository.GetById(colporteurId);

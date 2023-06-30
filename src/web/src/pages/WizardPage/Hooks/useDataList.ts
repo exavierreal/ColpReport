@@ -141,6 +141,8 @@ export function useDataList() {
         isAssociationInputFocused,
         setDisplayUnionSelected,
         setDisplayAssociationSelected,
+        setSelectedAssociation,
+        setSelectedUnion,
         keyboardFocusIndex,
         selectedUnion,
         selectedAssociation,

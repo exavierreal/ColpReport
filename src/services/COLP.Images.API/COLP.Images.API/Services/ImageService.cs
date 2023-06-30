@@ -12,9 +12,9 @@ namespace COLP.Images.API.Services
             _imageRepository = imageRepository;
         }
 
-        public Image GetImage(Guid id)
+        public async Task<Image> GetImage(Guid id)
         {
-            return _imageRepository.GetById(id);
+            return await _imageRepository.GetById(id);
         }
     }
 }

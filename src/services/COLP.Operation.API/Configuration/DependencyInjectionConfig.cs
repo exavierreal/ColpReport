@@ -13,7 +13,8 @@ namespace COLP.Operation.API.Configuration
         public static void RegisterServices(this IServiceCollection services)
         {
             services.AddScoped<IMediatorHandler, MediatorHandler>();
-            services.AddScoped<IRequestHandler<SaveGoalCommand, ValidationResult>, GoalCommandHandler>();
+            services.AddScoped<IRequestHandler<SaveGoalCommand, ValidationResult>, SaveGoalCommandHandler>();
+            services.AddScoped<IRequestHandler<UpdateGoalCommand, ValidationResult>, UpdateGoalCommandHandler>();
 
             services.AddScoped<IGoalService, GoalService>();
 

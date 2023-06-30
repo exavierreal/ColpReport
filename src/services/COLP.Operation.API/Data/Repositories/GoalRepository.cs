@@ -15,13 +15,29 @@ namespace COLP.Operation.API.Data.Repositories
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public void Add(Goal goal)
+        public void Insert(Goal goal)
         {
             _context.Add(goal);
         }
+
+        public void Update(Goal goal)
+        {
+            _context.Update(goal);
+        }
+
+        public async Task<Goal> GetById(Guid id)
+        {
+            return await _context.Goal.FindAsync(id);
+        }
+
         public async Task<Goal> GetGoalByTeamId(Guid teamId)
         {
             return await _context.Goal.FirstOrDefaultAsync(x => x.TeamId == teamId);
+        }
+
+        public async Task<Goal> GetGoalByColporteurId(Guid colporteurId)
+        {
+            return await _context.Goal.FirstOrDefaultAsync(x => x.ColporteurId == colporteurId);
         }
 
         public void Dispose()

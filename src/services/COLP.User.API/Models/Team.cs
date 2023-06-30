@@ -24,6 +24,13 @@ namespace COLP.Management.API.Models
             AssociationId = associationId;
             ImageId = imageId;
         }
+
+        public void UpdateTeamProperties(string name, Guid associationId, Guid? imageId)
+        {
+            Name = name;
+            AssociationId = associationId;
+            ImageId = imageId;
+        }
         
     }
 }

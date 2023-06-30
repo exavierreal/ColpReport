@@ -3,7 +3,7 @@ import { Button } from "./styles";
 
 interface NextButtonProps {
     text: string;
-    handlePageWizard: (a: boolean) => void;
+    handlePageWizard: (hasClose: boolean) => void;
 }
 
 export function NextButton(props: NextButtonProps) {

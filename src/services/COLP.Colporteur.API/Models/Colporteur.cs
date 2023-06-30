@@ -20,7 +20,7 @@ namespace COLP.Person.API.Models
         public Image Image { get; private set; }
 
         public ICollection<Goal> Goals { get; private set; }
-        public ICollection<Category> Categories { get; private set; }
+        public ICollection<ColporteurCategory> ColporteurCategories { get; private set; }
 
         protected Colporteur() { }
 
@@ -52,5 +52,12 @@ namespace COLP.Person.API.Models
             Id = id;
             Address = address;
         }
+
+        public void SetImage(Image image)
+        {
+            Image = image;
+        }
+
+        
     }
 }

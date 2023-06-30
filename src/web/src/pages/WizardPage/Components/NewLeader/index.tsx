@@ -4,23 +4,29 @@ import { ActionButtons } from "../../../../shared/Components/Buttons/ActionButto
 import { HeaderBar } from "../../../../shared/Components/HeaderBar";
 import { ProgressBar } from "../../../../shared/Components/ProgressBar";
 import { SubtitleBox } from "../../../../shared/Components/Titles/SubtitleBox";
-import { Button, CameraIcon, CardBox, Container, Content, ContentBox, MainImage, Picture, Subheading } from "./styles";
+import { Button, CameraIcon, CardBox, Container, Content, ContentBox, FinalSection, MainImage, Picture, Subheading } from "./styles";
 import { WizardProps } from "../../Interfaces/WizardProps";
 import { useImage } from "../../../../shared/Hooks/useImage";
 import { GoalModal } from "../../../../shared/Components/Modals/GoalModal";
 import { Leader } from "../../Interfaces/Leader";
 import { SinceDateModal } from "../../../../shared/Components/Modals/SinceDateModal";
 import { FormatDatePresentation } from "../../../../shared/Utils/FormatDatePresentation";
-import { Category } from "../../../../shared/Models/Category.model";
-import { useSaveLeaderApi } from "../../../../api/useLeaderApi";
+import { CategoryModel } from "../../../../shared/Models/Category.model";
+import { getSavedLeader, useSaveLeaderApi } from "../../../../api/useLeaderApi";
 import { useNavigate } from "react-router-dom";
 import { CancelModal } from "../../../../shared/Components/Modals/CancelModal";
 import { Categories } from "../../../../shared/Components/Sections/Categories";
+import { getUserToken } from "../../../../auth/useAuth";
+import { FormatMoneyValue } from "../../../../shared/Utils/FormatMoneyValue";
+import { GetCategoryById } from "../../../../api/useCategoryApi";
 
 export function NewLeader(props: WizardProps) {
     const navigate = useNavigate();
-    const { previewImage, filename, inputRef, handleImageUpload, handleButtonClick } = useImage();
+    const { previewImage, filename, inputRef, handleImageUpload, handleButtonClick, setPreviewImage, setFilename } = useImage();
     const { saveLeader, isLoading, error, isLeaderSaved, setIsLeaderSaved } = useSaveLeaderApi();
+
+    const userToken = getUserToken();
+    const userId = userToken ? userToken.id : null;
     
     const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
     const [isSinceDateModalOpen, setIsSinceDateModalOpen ] = useState(false);
@@ -28,7 +34,45 @@ export function NewLeader(props: WizardProps) {
     
     const [leader, setLeader] = useState<Leader>({ imageData: undefined, goal: 0, sinceDate: new Date(), categoryIds: [] })
     
-    const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<CategoryModel[]>([]);
+
+    useEffect(() => {
+        getSavedLeader(userId)
+            .then(async (response) => {
+                if (response) {
+                    setLeader((prevLeader) => {
+                        let updatedLeader = { ...prevLeader }
+
+                        if (response.imageData) {
+                            const base64image = `data:image/png;base64,${response.imageData}`;
+                            setPreviewImage(base64image);
+                            setFilename(response.filename!);
+
+                            updatedLeader.imageData = response.imageData;
+                            updatedLeader.filename = response.filename;
+                        }
+
+                        updatedLeader.sinceDate = new Date(response.sinceDate!);
+                        updatedLeader.goal = response.goal;
+
+                        if (response.categoryIds) {
+                            updatedLeader.categoryIds = response.categoryIds;
+                        }
+
+                        return updatedLeader;
+                    });
+
+                    const categoryPromises = response.categoryIds!.map(async (id) => {
+                        return await GetCategoryById(id);
+                    });
+
+                    const categories = await Promise.all(categoryPromises);
+                    setSelectedCategories(categories);
+                    
+                    setIsLeaderSaved(true);
+                }
+            })
+    }, [userId])
 
     useEffect(() => {
         const uniqueCategoryIds = [...new Set(selectedCategories.map(category => category.id))];
@@ -47,14 +91,6 @@ export function NewLeader(props: WizardProps) {
             return updateLeader;
         })
     }, [previewImage, filename, selectedCategories]);
-    
-    function formatGoalValue (value: string) {
-        const [integerPart, decimalPart] = value.split(',');
-        const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        const formattedDecimalPart = decimalPart ? decimalPart.slice(0, 2) : '';
-
-        return `${formattedIntegerPart},${formattedDecimalPart.padEnd(2, '0')}`;
-    }
 
     function handleToggleGoalModal(event?: FormEvent) {
         if (event)
@@ -113,7 +149,7 @@ export function NewLeader(props: WizardProps) {
                             </CameraIcon>
                         </Picture>
 
-                        <Subheading className="price">R$ { formatGoalValue(leader.goal.toString()) }</Subheading>
+                        <Subheading className="price">R$ { FormatMoneyValue(leader.goal!.toString()) }</Subheading>
 
                         <Button onClick={handleToggleGoalModal}>Definir Meta</Button>
                     </ContentBox>
@@ -123,20 +159,22 @@ export function NewLeader(props: WizardProps) {
                     <SubtitleBox title="Colporta desde" />
 
                     <ContentBox>
-                        <Subheading className="since-date">{ FormatDatePresentation(leader.sinceDate) }</Subheading>
+                        <Subheading className="since-date">{ FormatDatePresentation(leader.sinceDate!) }</Subheading>
                         <Button onClick={handleToggleSinceDateModal}>Definir Data</Button>
                     </ContentBox>
                 </CardBox>
 
                 <Categories selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
 
-                <ProgressBar index={props.index} />
+                <FinalSection>
+                    <ProgressBar index={props.index} />
 
-                <ActionButtons onCancel={handleCancel} saveDisabled={isLeaderSaved} />
+                    <ActionButtons onCancel={handleCancel} saveDisabled={isLeaderSaved} />
+                </FinalSection>
             </Content>
         
-            { isGoalModalOpen && <GoalModal onCloseModal={handleToggleGoalModal} onSaveGoal={handleSaveGoal} initialValue={leader.goal} type="leader" /> }
-            { isSinceDateModalOpen && <SinceDateModal initialValue={leader.sinceDate} onClose={handleToggleSinceDateModal} onSave={handleSaveSinceDate} /> }
+            { isGoalModalOpen && <GoalModal onCloseModal={handleToggleGoalModal} onSaveGoal={handleSaveGoal} initialValue={leader.goal!} type="leader" /> }
+            { isSinceDateModalOpen && <SinceDateModal initialValue={leader.sinceDate!} onClose={handleToggleSinceDateModal} onSave={handleSaveSinceDate} /> }
 
             { isCancelModalOpen && <CancelModal onCancelConfirm={handleCancel} /> }
         </Container>

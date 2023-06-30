@@ -1,3 +1,5 @@
+using COLP.Images.API.Data;
+using COLP.Operation.API.Data;
 using COLP.Person.API.Configuration;
 using COLP.Person.API.Data;
 using COLP.WebAPI.Core.Identity;
@@ -9,9 +11,15 @@ var AllowSpecificOrigins = "_allowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 AuthConfig authConfig = new();
 
-#region API Configuration
-builder.Services.AddDbContext<ColporteurContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+#region Configuring DB Contexts
+builder.Services.AddDbContext<ColporteurContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<OperationContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ImageContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+#endregion
+
+#region Add Cors
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: AllowSpecificOrigins,
@@ -22,11 +30,13 @@ builder.Services.AddCors(options =>
     );
 });
 
+#endregion
+
+#region API Configuration
 builder.Services.AddControllers();
 #endregion
 
 authConfig.AddJwtConfiguration(builder);
-//#endregion
 
 #region Swagger Configuration
 

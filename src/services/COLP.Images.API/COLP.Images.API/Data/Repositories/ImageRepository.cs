@@ -19,9 +19,9 @@ namespace COLP.Images.API.Data.Repository
             _context.Image.Add(image);
         }
 
-        public Image GetById(Guid id)
+        public async Task<Image> GetById(Guid id)
         {
-            return _context.Image.Where(x => x.Id == id).FirstOrDefault();
+            return await _context.Image.FindAsync(id);
         }
 
         public void Dispose()

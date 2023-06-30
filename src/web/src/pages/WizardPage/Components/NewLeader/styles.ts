@@ -3,10 +3,12 @@ import { CategoryBoxProps } from "../../../../shared/Interfaces/CategoryBoxProps
 
 export const Container = styled.div``;
 
-export const Content = styled.form``;
+export const Content = styled.form`
+    padding: 0 40px;
+`;
 
 export const CardBox = styled.div`
-    margin: 28px 40px 0;
+    margin-bottom: 28px;
     border-radius: 10px;
     box-shadow: 0 0 20px 3px rgba(137, 144, 163, .2);
     background: var(--light-v1);
@@ -99,4 +101,8 @@ export const Button = styled.button`
     border-radius: 25px;
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0, 0, 0, .25);
+`;
+
+export const FinalSection = styled.div`
+    margin-top: 30px;
 `;

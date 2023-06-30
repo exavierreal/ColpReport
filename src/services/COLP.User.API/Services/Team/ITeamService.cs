@@ -5,6 +5,7 @@ namespace COLP.Management.API.Services
     public interface ITeamService
     {
         Task<bool> SaveTeam(Team team);
+        Task<bool> UpdateTeam(Team team);
 
         Task<Team> GetTeamById(Guid id);
     }

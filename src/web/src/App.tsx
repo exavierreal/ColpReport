@@ -32,16 +32,16 @@ function App() {
           <Route path='/' element={ <Layout /> }>
             {/* Public Routes */}
             <Route path='/' element={<LoginPage />} />
-            <Route path='/dashboard' element={<DashboardPage />} />
-            <Route path='/colporteurs' element={<ColporteursPage />} />
-            <Route path='/colporteurs/new' element={<ColporteurNewEditPage />} />
-            <Route path='/statement' element={<AccountStatementPage />} />
-            <Route path='/operation' element={<OperationPage />} />
-            <Route path='/reports' element={<ReportPage />} />
 
             {/* Private Routes */}
             <Route element={<RequireAuth />}>
               <Route path='wizard' element={<WizardPage />} />
+              <Route path='dashboard' element={<DashboardPage />} />
+              <Route path='colporteurs' element={<ColporteursPage />} />
+              <Route path='colporteurs/new' element={<ColporteurNewEditPage />} />
+              <Route path='statement' element={<AccountStatementPage />} />
+              <Route path='operation' element={<OperationPage />} />
+              <Route path='reports' element={<ReportPage />} />
             </Route>
           </Route>
 

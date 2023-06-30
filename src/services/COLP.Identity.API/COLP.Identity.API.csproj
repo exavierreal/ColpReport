@@ -32,4 +32,8 @@
     <ProjectReference Include="..\..\building blocks\COLP.WebAPI.Core\COLP.WebAPI.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
