@@ -8,7 +8,7 @@ import { Button, CameraIcon, CardBox, Container, Content, ContentBox, FinalSecti
 import { WizardProps } from "../../Interfaces/WizardProps";
 import { useImage } from "../../../../shared/Hooks/useImage";
 import { GoalModal } from "../../../../shared/Components/Modals/GoalModal";
-import { Leader } from "../../Interfaces/Leader";
+import { ColporteurModel } from "../../../../shared/Models/Colporteur.model.ts";
 import { SinceDateModal } from "../../../../shared/Components/Modals/SinceDateModal";
 import { FormatDatePresentation } from "../../../../shared/Utils/FormatDatePresentation";
 import { CategoryModel } from "../../../../shared/Models/Category.model";
@@ -32,7 +32,7 @@ export function NewLeader(props: WizardProps) {
     const [isSinceDateModalOpen, setIsSinceDateModalOpen ] = useState(false);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     
-    const [leader, setLeader] = useState<Leader>({ imageData: undefined, goal: 0, sinceDate: new Date(), categoryIds: [] })
+    const [leader, setLeader] = useState<ColporteurModel>({ imageData: undefined, goal: 0, sinceDate: new Date(), categoryIds: [] })
     
     const [selectedCategories, setSelectedCategories] = useState<CategoryModel[]>([]);
 

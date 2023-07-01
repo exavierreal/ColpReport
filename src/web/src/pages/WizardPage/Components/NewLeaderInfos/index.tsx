@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { CancelModal } from "../../../../shared/Components/Modals/CancelModal";
 import { getUserToken } from "../../../../auth/useAuth";
 import { getSavedLeader, useSaveLeaderApi } from "../../../../api/useLeaderApi";
-import { Leader } from "../../Interfaces/Leader";
+import { ColporteurModel } from "../../../../shared/Models/Colporteur.model.ts";
 
 export function NewLeaderInfos(props: WizardProps) {
     const userToken = getUserToken();
@@ -18,7 +18,7 @@ export function NewLeaderInfos(props: WizardProps) {
     const navigate = useNavigate();
     const { saveLeader, isLoading, error, isLeaderSaved, setIsLeaderSaved } = useSaveLeaderApi();
 
-    const [leader , setLeader] = useState<Leader>({
+    const [leader , setLeader] = useState<ColporteurModel>({
         name: '', lastname: '', email: '', phoneNumber: '', postalCode: '', uf: '', city: '',
         district: '', address: '', addressNumber: '', complement: '', cpf: '', rg: '', shirtSize: ''
     });
@@ -44,10 +44,7 @@ export function NewLeaderInfos(props: WizardProps) {
     function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
         const { name, value } = event.target;
 
-        console.log(`[${name}]: ${value}`)
-
         setLeader((prevLeader) => ({...prevLeader, [name]: value}))
-
     }
 
     function handleCancel(choice?: string) {

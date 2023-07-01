@@ -1,7 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
-import { Colporteur } from "../Models/Colporteur";
+import { ColporteurModel } from "../../../shared/Models/Colporteur.model.ts";
+
 
 export interface ColpParamsProps {
-    colporteur: Colporteur;
-    setColporteur: Dispatch<SetStateAction<Colporteur>>;
+    colporteur: ColporteurModel;
+    setColporteur: Dispatch<SetStateAction<ColporteurModel>>;
+    emptyInputs?: string[];
+    setEmptyInputs?: Dispatch<SetStateAction<string[]>>;
 }

@@ -6,9 +6,29 @@ import { Category } from "./Components/Category";
 import { NewButtonMob } from "../../shared/Components/Buttons/Mobile/NewButtonMob";
 import { useNavigate } from "react-router-dom";
 import { Subtitle } from "../../shared/Components/Titles/Subtitle";
+import { useEffect, useState } from "react";
+import { ColporteurModel } from "../../shared/Models/Colporteur.model.ts";
+import { getColporteurs } from "../../api/useColporteurApi";
+import { getUserToken } from "../../auth/useAuth";
+import { useImage } from "../../shared/Hooks/useImage";
 
 export function ColporteursPage() {
+    const userToken = getUserToken();
+    const userId = userToken ? userToken.id : null;
+    
     const navigate = useNavigate();
+    const { previewImage } = useImage();
+
+    const [colporteurs, setColporteurs] = useState<ColporteurModel[]>();
+
+    useEffect(() => {
+        getColporteurs(userId)
+            .then((response) => {
+                setColporteurs(response);
+                console.log(response);
+            })
+    }, []);
+
     
     function handleProfileClick() {
         console.log("profile");
@@ -26,27 +46,31 @@ export function ColporteursPage() {
                 <Subtitle title="Colportor" />
 
                 <ColporteurList>
-                    <ColporteurSection>
-                        <ColporteurImage>
-                            <Image>
-                                <Icon icon="fe:user" width="36" className="icon" />
-                            </Image>
-                        </ColporteurImage>
+                    {colporteurs?.map((colporteur) => (
+                        <ColporteurSection key={colporteur.id}>
+                            <ColporteurImage>
+                                <Image>
+                                    <Icon icon="fe:user" width="36" className="icon" />
+                                </Image>
+                            </ColporteurImage>
 
-                        <ColporteurInfo>
-                            <ColporteurName>Ricardo Salles</ColporteurName>
-                            <ColporteurEmail>ricardo.salles@hotmail.com</ColporteurEmail>
-                            <ColporteurCategories>
-                                <Category type="PP">PP</Category>
-                                <Category type="IN">IN</Category>
-                                <Category type="AG">AG</Category>
-                            </ColporteurCategories>
-                        </ColporteurInfo>
+                            <ColporteurInfo>
+                                <ColporteurName>{colporteur.name} {colporteur.lastname}</ColporteurName>
+                                <ColporteurEmail>teste@teste.com</ColporteurEmail>
+                                
+                                <ColporteurCategories>
+                                    <Category type="PP">PP</Category>
+                                    <Category type="IN">IN</Category>
+                                    <Category type="AG">AG</Category>
+                                </ColporteurCategories>
+                            </ColporteurInfo>
 
-                        <NextIcon>
-                            <Icon icon="akar-icons:arrow-right" width="40" className="next-icon" />
-                        </NextIcon>
-                    </ColporteurSection>
+                            <NextIcon>
+                                <Icon icon="akar-icons:arrow-right" width="40" className="next-icon" />
+                            </NextIcon>
+                        </ColporteurSection>
+                    ))}
+
                 </ColporteurList>
 
                 <NewButtonMob onClick={handleClickNewButton} />

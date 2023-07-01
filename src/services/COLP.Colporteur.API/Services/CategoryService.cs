@@ -26,11 +26,17 @@ namespace COLP.Person.API.Services
 
         public async Task<bool> InsertCategoriesToColporteur(Guid colporteurId, IEnumerable<Guid> categoryIds)
         {
-            var colporteur = await _colporteurRepository.GetById(colporteurId);
+            try
+            {
+                var colporteur = await _colporteurRepository.GetById(colporteurId);
 
-            await _categoryRepository.InsertCategoriesToColporteur(colporteurId, categoryIds);
+                await _categoryRepository.InsertCategoriesToColporteur(colporteurId, categoryIds);
 
-            return await _categoryRepository.UnitOfWork.Commit();
+                return await _categoryRepository.UnitOfWork.Commit();
+            }catch (Exception e)
+            {
+                throw;
+            }
         }
     }
 }

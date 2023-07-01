@@ -9,7 +9,7 @@ import { FormEvent, useState } from "react";
 import { SinceDateModal } from "../../../../shared/Components/Modals/SinceDateModal";
 
 export function SinceDateCard({ colporteur, setColporteur }: ColpParamsProps) {
-    const { fullStars, halfStar } = CalculateStars(colporteur.sinceDate);
+    const { fullStars, halfStar } = CalculateStars(colporteur.sinceDate!);
     const [isSinceDateModalOpen, setIsSinceDateModalOpen ] = useState(false);
 
     function handleToggleSinceDateModal(event?: FormEvent) {
@@ -28,7 +28,7 @@ export function SinceDateCard({ colporteur, setColporteur }: ColpParamsProps) {
             <SubtitleBox title="Colporta desde" />
 
             <Content>
-                <SinceDate>{FormatDatePresentation(colporteur.sinceDate)}</SinceDate>
+                <SinceDate>{FormatDatePresentation(colporteur.sinceDate!)}</SinceDate>
 
                 <Stars>
                     {Array.from({ length: fullStars }, (_, index) => (
@@ -43,7 +43,7 @@ export function SinceDateCard({ colporteur, setColporteur }: ColpParamsProps) {
                 <DefineButtonMob text="Definir Data" onClick={handleToggleSinceDateModal} />
             </Content>
 
-            { isSinceDateModalOpen && <SinceDateModal initialValue={colporteur.sinceDate} onClose={handleToggleSinceDateModal} onSave={handleSaveSinceDate} /> }
+            { isSinceDateModalOpen && <SinceDateModal initialValue={colporteur.sinceDate!} onClose={handleToggleSinceDateModal} onSave={handleSaveSinceDate} /> }
         </Container>
     )
 }

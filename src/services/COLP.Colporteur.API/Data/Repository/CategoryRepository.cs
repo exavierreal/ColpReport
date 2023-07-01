@@ -27,25 +27,29 @@ namespace COLP.Person.API.Data.Repository
 
         public async Task InsertCategoriesToColporteur(Guid userId, IEnumerable<Guid> categoryIds)
         {
-            
+            try { 
             var colporteur = await _context.Colporteurs.Include(c => c.ColporteurCategories).FirstOrDefaultAsync(c => c.Id == userId);
 
-            if (colporteur != null)
-            {
-                var existingCategoryIds = colporteur.ColporteurCategories.Select(cc => cc.CategoryId).ToList();
-
-                var newCategoryIds = categoryIds.Except(existingCategoryIds).ToList();
-
-                foreach (var categoryId in newCategoryIds)
+                if (colporteur != null)
                 {
-                    var category = await _context.Categories.FindAsync(categoryId);
+                    var existingCategoryIds = colporteur.ColporteurCategories.Select(cc => cc.CategoryId).ToList();
 
-                    if (category != null)
+                    var newCategoryIds = categoryIds.Except(existingCategoryIds).ToList();
+
+                    foreach (var categoryId in newCategoryIds)
                     {
-                        var colporteurCategory = new ColporteurCategory(colporteur.Id, category.Id);
-                        _context.ColporteurCategories.Add(colporteurCategory);
+                        var category = await _context.Categories.FindAsync(categoryId);
+
+                        if (category != null)
+                        {
+                            var colporteurCategory = new ColporteurCategory(colporteur.Id, category.Id);
+                            _context.ColporteurCategories.Add(colporteurCategory);
+                        }
                     }
                 }
+            } catch (Exception ex)
+            {
+                throw;
             }
         }
 

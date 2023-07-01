@@ -19,6 +19,6 @@
         public bool IsActive { get; set; }
         public DateTime SinceDate { get; set; }
         public Guid? TeamId { get; set; }
-        public Guid Imageid { get; set; }
+        public Guid ImageId { get; set; }
     }
 }
