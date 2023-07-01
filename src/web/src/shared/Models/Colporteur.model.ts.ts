@@ -1,4 +1,5 @@
-export interface Leader {
+export interface ColporteurModel {
+    id?: string;
     name?: string;
     lastname?: string;
     email?: string;

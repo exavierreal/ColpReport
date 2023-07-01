@@ -15,9 +15,16 @@ namespace COLP.Person.API.Data.Repository
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public async Task<IEnumerable<Colporteur>> GetAll()
+        public async Task<IEnumerable<Colporteur>> GetAllColporteurs(Guid userId, Guid teamId)
         {
-            return await _context.Colporteurs.AsNoTracking().ToListAsync();
+            try
+            {
+                return await _context.Colporteurs.Include(c => c.ColporteurCategories).Where(c => c.TeamId == teamId && c.Id != userId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<Colporteur> GetById(Guid id)

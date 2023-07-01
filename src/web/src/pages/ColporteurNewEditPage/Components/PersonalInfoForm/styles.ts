@@ -4,7 +4,7 @@ export const Container = styled.div`
     margin: 36px 0;
 `;
 
-export const InfoForm = styled.form`
+export const InfoForm = styled.div`
     display: flex;
     flex-direction: column;
 `;
@@ -51,5 +51,9 @@ export const Textbox = styled.input`
 
     &:focus {
         border: 2px solid var(--primary-v3);
+    }
+
+    &.error {
+        border: 1px solid var(--danger-v1);
     }
 `;

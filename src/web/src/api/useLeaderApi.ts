@@ -2,19 +2,19 @@ import axios, { AxiosError } from "axios";
 import { getUserToken } from "../auth/useAuth";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Leader } from "../pages/WizardPage/Interfaces/Leader";
+import { ColporteurModel } from "../shared/Models/Colporteur.model.ts";
 
 const BASE_URL = "https://localhost:7168/api/"
 const COLPORTEUR_URL = BASE_URL + "Colporteur/"
 
-const saveLeader = (leader: Leader, userId: string | null) => {
+const saveLeader = (leader: ColporteurModel, userId: string | null) => {
     return axios.post(COLPORTEUR_URL + "leader", leader, {
         headers: {'X-User-Id': userId}
     })
 }
 
 export async function getSavedLeader(userId: string | null) {
-    return await axios.get<Leader>(COLPORTEUR_URL + "id", { params: {id: userId} }).then(response => response.data);
+    return await axios.get<ColporteurModel>(COLPORTEUR_URL + "id", { params: {id: userId} }).then(response => response.data);
 }
 
 export function useSaveLeaderApi() {
@@ -24,9 +24,8 @@ export function useSaveLeaderApi() {
     const userToken = getUserToken();
     const userId = userToken ? userToken.id : null;
 
-    const { mutate, isLoading } = useMutation((leader: Leader) => saveLeader(leader, userId), {
+    const { mutate, isLoading } = useMutation((leader: ColporteurModel) => saveLeader(leader, userId), {
         onSuccess: data => {
-            debugger;
             setIsLeaderSaved(true);
         },
         onError: (response: AxiosError) => {

@@ -21,6 +21,7 @@ namespace COLP.Person.API.Configuration
             services.AddScoped<IMediatorHandler, MediatorHandler>();
             services.AddScoped<IRequestHandler<RegisterColporteurCommand, ValidationResult>, RegisterColporteurCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateColporteurCommand, ValidationResult>, UpdateColporteurCommandHandler>();
+            services.AddScoped<IRequestHandler<SaveColporteurCommand, ValidationResult>, SaveColporteurCommandHandler>();
 
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IColporteurService, ColporteurService>();

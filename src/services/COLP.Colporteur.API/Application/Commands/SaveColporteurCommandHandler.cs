@@ -7,16 +7,16 @@ using MediatR;
 
 namespace COLP.Person.API.Application.Commands
 {
-    public class UpdateColporteurCommandHandler : CommandHandler, IRequestHandler<UpdateColporteurCommand, ValidationResult>
+    public class SaveColporteurCommandHandler : CommandHandler, IRequestHandler<SaveColporteurCommand, ValidationResult>
     {
         private readonly IColporteurRepository _colporteurRepository;
 
-        public UpdateColporteurCommandHandler(IColporteurRepository colporteurRepository)
+        public SaveColporteurCommandHandler(IColporteurRepository colporteurRepository)
         {
             _colporteurRepository = colporteurRepository;
         }
 
-        public async Task<ValidationResult> Handle(UpdateColporteurCommand request, CancellationToken cancellationToken)
+        public async Task<ValidationResult> Handle(SaveColporteurCommand request, CancellationToken cancellationToken)
         {
             try { 
                 if (!request.IsValid())
@@ -25,7 +25,7 @@ namespace COLP.Person.API.Application.Commands
                 var colporteur = new Colporteur(request.Id, request.Name, request.LastName, request.PhoneNumber, request.CPF, request.RG,
                                                 request.ShirtSize, request.IsActive, request.SinceDate.Value, request.ImageId, request.TeamId);
 
-                _colporteurRepository.Update(colporteur);
+                _colporteurRepository.Insert(colporteur);
 
                 colporteur.AddEvent(new UpdateColporteurEvent(request.AggregateId, request.Id, request.Name, request.LastName, request.PhoneNumber,
                                         request.CPF, request.RG, request.ShirtSize, request.IsActive, request.TeamId));

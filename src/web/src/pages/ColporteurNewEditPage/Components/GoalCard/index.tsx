@@ -21,7 +21,7 @@ export function GoalCard ({ colporteur, setColporteur }: ColpParamsProps) {
                 updatedColp.imageData = previewImage.split(",")[1];
             
             if (filename)
-                updatedColp.imageFilename = filename;
+                updatedColp.filename = filename;
 
             return updatedColp;
         })
@@ -55,12 +55,12 @@ export function GoalCard ({ colporteur, setColporteur }: ColpParamsProps) {
                     </CameraIcon>
                 </Picture>
 
-                <Subheading className="price">R$ { FormatMoneyValue(colporteur.goal.toString()) }</Subheading>
+                <Subheading className="price">R$ { FormatMoneyValue(colporteur.goal!.toString()) }</Subheading>
 
                 <DefineButtonMob text="Definir Meta" onClick={handleToggleGoalModal} />
             </Content>
 
-            { isGoalModalOpen && <GoalModal onCloseModal={handleToggleGoalModal} onSaveGoal={handleSaveGoal} initialValue={colporteur.goal} type="leader" /> }
+            { isGoalModalOpen && <GoalModal onCloseModal={handleToggleGoalModal} onSaveGoal={handleSaveGoal} initialValue={colporteur.goal!} type="leader" /> }
         </Container>
     )
 }
