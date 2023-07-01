@@ -1,0 +1,44 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: dotnet build COLP.Identity.API.csProj
+  displayName: 'Build Identity'
+
+- script: dotnet run --project COLP.Identity.API.csjProj
+  displayName: 'Run Identity'
+
+- script: dotnet build COLP.Person.API.csjProj
+  displayName: 'Build Person'
+
+- script: dotnet run --project COLP.Person.API.csjProj
+  displayName: 'Run Person'
+
+- script: dotnet build COLP.Images.API.csjProj
+  displayName: 'Build Images'
+
+- script: dotnet run --project COLP.Images.API.csjProj
+  displayName: 'Run Images'
+
+- script: dotnet build COLP.Management.API.csjProj
+  displayName: 'Build Management'
+
+- script: dotnet run --project COLP.Management.API.csjProj
+  displayName: 'Run Management'
+
+- script: dotnet build COLP.Operation.API.csjProj
+  displayName: 'Build Operation'
+
+- script: dotnet run --project COLP.Operation.API.csjProj
+  displayName: 'Run Operation'
+
+- script: |
+    cd ReactApp
+    npm install
+    npm run build
+  displayName: 'Build and run React App'
